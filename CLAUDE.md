@@ -78,13 +78,18 @@ Ce fichier fournit des conseils à Claude Code (claude.ai/code) lors du travail 
 
 ## État actuel
 
-Projet Pong - Architecture ECS de base **COMPLÉTÉE** :
-- **Infrastructure** : Makefile, PCH, constants.h, git hooks, coverage 94.2%
+Projet Pong - Architecture ECS et Systèmes de jeu **COMPLÉTÉS** :
+- **Infrastructure** : Makefile, PCH, constants.h, git hooks, coverage complète
 - **Entités** : Pool statique avec IDs uniques, gestion transparente
-- **Composants** : Position et Velocity avec Structure of Arrays (SoA) 
-- **Systèmes** : Movement system fonctionnel
-- **Tests TDD** : 8 tests atomiques, approche simple sans frameworks
+- **Composants** : Position, Velocity, Ball, Paddle avec Structure of Arrays (SoA)
+- **Systèmes** : Movement, Bounds, Collision, Input - tous fonctionnels
+- **Tests TDD** : 12 tests atomiques, approche simple sans frameworks
 - **Build** : SDL2 uniquement, warnings stricts, sanitizers
+- **Input System** : Actions métier (PLAYER1_PADDLE_UP, PLAYER2_PADDLE_DOWN, etc.)
+- **Collision** : Détection AABB balle-paddle et balle-murs avec rebonds
+- **Bounds** : Limitation des paddles dans les limites d'écran
+
+**Prochaines étapes** : Système Score, Game State, Reset de partie
 
 ## Configuration de développement
 

@@ -35,23 +35,30 @@ Le 20 Games Challenge est un défi d'apprentissage du développement de jeux vid
 
 ### Phase actuelle : Pong (01_pong)
 
-#### Architecture ECS implémentée ✅
+#### Architecture ECS complète ✅
 - **Entités** : Pool statique avec IDs uniques, gestion transparente
-- **Composants** : Position et Velocity avec Structure of Arrays (SoA) pour performance
-- **Systèmes** : Movement system combinant Position + Velocity
-- **Tests TDD** : Couverture 94.2% avec tests atomiques (un fichier = un test)
+- **Composants** : Position, Velocity, Ball, Paddle avec Structure of Arrays (SoA)
+- **Systèmes** : Movement, Bounds, Collision, Input - tous fonctionnels
+- **Tests TDD** : Couverture complète avec tests atomiques (un fichier = un test)
 
 #### Infrastructure de build ✅
 - **Makefile** : Compilation avec warnings stricts, sanitizers, coverage
-- **Dépendances** : SDL2 uniquement (GTest/GMock retirés pour simplicité)
-- **Tests** : Approche simple avec `assert()` et `printf()` 
+- **Dépendances** : SDL2 uniquement (approche simple sans frameworks externes)
+- **Tests** : Approche TDD pure avec `assert()` et `printf()` 
 - **Formatage** : clang-format + git hooks automatiques
 - **PCH** : Headers précompilés pour accélération du build
 
-#### Prochain étapes
-- [ ] Composants spécifiques Pong (Ball, Paddle)
-- [ ] Systèmes collision et rendu
-- [ ] Intégration SDL2 complète
+#### Systèmes de jeu implémentés ✅
+- **Movement System** : Applique velocity à position
+- **Bounds System** : Maintient les paddles dans les limites d'écran
+- **Collision System** : Gère collisions balle-paddle et balle-murs
+- **Input System** : Contrôles des paddles avec actions métier (PLAYER1_PADDLE_UP, etc.)
+
+#### Prochaines étapes
+- [ ] Système Score et Game State
+- [ ] Reset de partie et gestion de points
+- [ ] Intégration SDL2 complète (rendu, événements clavier)
+- [ ] Jeu principal complet
 
 ### Jeux à venir
 - [x] **01_pong** - Architecture ECS de base implementée
