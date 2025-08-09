@@ -1,0 +1,33 @@
+[
+  {
+    "directory": "/Users/kdridi/git/github.com/kdridi/20GC.git/01_pong",
+    "command": "gcc -std=c23 -Wall -Wextra -Werror -Wpedantic -Wconversion -Wsign-conversion -Wcast-align -Wcast-qual -Wdouble-promotion -Wfloat-equal -Wformat=2 -Winit-self -Wmissing-declarations -Wmissing-include-dirs -Wmissing-prototypes -Wnull-dereference -Wpointer-arith -Wredundant-decls -Wshadow -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef -Wunreachable-code -Wwrite-strings -g3 -DDEBUG -fsanitize=address,undefined -fno-omit-frame-pointer -I/opt/homebrew/include -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE -Iinclude -include include/pch.h -c src/entity_pool.c",
+    "file": "src/entity_pool.c"
+  }
+]
+  ,{
+    "directory": "/Users/kdridi/git/github.com/kdridi/20GC.git/01_pong",
+    "command": "gcc -std=c23 -Wall -Wextra -Werror -Wpedantic -Wconversion -Wsign-conversion -Wcast-align -Wcast-qual -Wdouble-promotion -Wfloat-equal -Wformat=2 -Winit-self -Wmissing-declarations -Wmissing-include-dirs -Wmissing-prototypes -Wnull-dereference -Wpointer-arith -Wredundant-decls -Wshadow -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef -Wunreachable-code -Wwrite-strings -g3 -DDEBUG -fsanitize=address,undefined -fno-omit-frame-pointer -I/opt/homebrew/include -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE -I/opt/homebrew/Cellar/googletest/1.17.0/include -DGTEST_HAS_PTHREAD=1 -I/opt/homebrew/Cellar/googletest/1.17.0/include -DGTEST_HAS_PTHREAD=1 -Iinclude -include include/pch.h -c tests/test_entity_count_active.c",
+    "file": "tests/test_entity_count_active.c"
+  }
+  ,{
+    "directory": "/Users/kdridi/git/github.com/kdridi/20GC.git/01_pong",
+    "command": "gcc -std=c23 -Wall -Wextra -Werror -Wpedantic -Wconversion -Wsign-conversion -Wcast-align -Wcast-qual -Wdouble-promotion -Wfloat-equal -Wformat=2 -Winit-self -Wmissing-declarations -Wmissing-include-dirs -Wmissing-prototypes -Wnull-dereference -Wpointer-arith -Wredundant-decls -Wshadow -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef -Wunreachable-code -Wwrite-strings -g3 -DDEBUG -fsanitize=address,undefined -fno-omit-frame-pointer -I/opt/homebrew/include -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE -I/opt/homebrew/Cellar/googletest/1.17.0/include -DGTEST_HAS_PTHREAD=1 -I/opt/homebrew/Cellar/googletest/1.17.0/include -DGTEST_HAS_PTHREAD=1 -Iinclude -include include/pch.h -c tests/test_entity_create.c",
+    "file": "tests/test_entity_create.c"
+  }
+  ,{
+    "directory": "/Users/kdridi/git/github.com/kdridi/20GC.git/01_pong",
+    "command": "gcc -std=c23 -Wall -Wextra -Werror -Wpedantic -Wconversion -Wsign-conversion -Wcast-align -Wcast-qual -Wdouble-promotion -Wfloat-equal -Wformat=2 -Winit-self -Wmissing-declarations -Wmissing-include-dirs -Wmissing-prototypes -Wnull-dereference -Wpointer-arith -Wredundant-decls -Wshadow -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef -Wunreachable-code -Wwrite-strings -g3 -DDEBUG -fsanitize=address,undefined -fno-omit-frame-pointer -I/opt/homebrew/include -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE -I/opt/homebrew/Cellar/googletest/1.17.0/include -DGTEST_HAS_PTHREAD=1 -I/opt/homebrew/Cellar/googletest/1.17.0/include -DGTEST_HAS_PTHREAD=1 -Iinclude -include include/pch.h -c tests/test_entity_destroy.c",
+    "file": "tests/test_entity_destroy.c"
+  }
+  ,{
+    "directory": "/Users/kdridi/git/github.com/kdridi/20GC.git/01_pong",
+    "command": "gcc -std=c23 -Wall -Wextra -Werror -Wpedantic -Wconversion -Wsign-conversion -Wcast-align -Wcast-qual -Wdouble-promotion -Wfloat-equal -Wformat=2 -Winit-self -Wmissing-declarations -Wmissing-include-dirs -Wmissing-prototypes -Wnull-dereference -Wpointer-arith -Wredundant-decls -Wshadow -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef -Wunreachable-code -Wwrite-strings -g3 -DDEBUG -fsanitize=address,undefined -fno-omit-frame-pointer -I/opt/homebrew/include -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE -I/opt/homebrew/Cellar/googletest/1.17.0/include -DGTEST_HAS_PTHREAD=1 -I/opt/homebrew/Cellar/googletest/1.17.0/include -DGTEST_HAS_PTHREAD=1 -Iinclude -include include/pch.h -c tests/test_entity_get_by_id.c",
+    "file": "tests/test_entity_get_by_id.c"
+  }
+  ,{
+    "directory": "/Users/kdridi/git/github.com/kdridi/20GC.git/01_pong",
+    "command": "gcc -std=c23 -Wall -Wextra -Werror -Wpedantic -Wconversion -Wsign-conversion -Wcast-align -Wcast-qual -Wdouble-promotion -Wfloat-equal -Wformat=2 -Winit-self -Wmissing-declarations -Wmissing-include-dirs -Wmissing-prototypes -Wnull-dereference -Wpointer-arith -Wredundant-decls -Wshadow -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef -Wunreachable-code -Wwrite-strings -g3 -DDEBUG -fsanitize=address,undefined -fno-omit-frame-pointer -I/opt/homebrew/include -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE -I/opt/homebrew/Cellar/googletest/1.17.0/include -DGTEST_HAS_PTHREAD=1 -I/opt/homebrew/Cellar/googletest/1.17.0/include -DGTEST_HAS_PTHREAD=1 -Iinclude -include include/pch.h -c tests/test_entity_get_by_invalid_id.c",
+    "file": "tests/test_entity_get_by_invalid_id.c"
+  }
+]

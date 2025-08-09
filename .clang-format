@@ -1,0 +1,33 @@
+Standard: c++11
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 0
+AccessModifierOffset: -4
+NamespaceIndentation: All
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterEnum: false
+  AfterStruct: false
+  AfterClass: false
+  SplitEmptyFunction: true
+  AfterControlStatement: false
+  AfterNamespace: false
+  AfterFunction: true
+  AfterUnion: true
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+
+# Pas d'alignement des déclarations et assignations
+AlignConsecutiveDeclarations: false
+AlignConsecutiveAssignments: false
+SpaceAfterCStyleCast: true
+AlwaysBreakAfterReturnType: TopLevel
+PointerAlignment: Left
+
+# Respect des contraintes (fonctions courtes)
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false

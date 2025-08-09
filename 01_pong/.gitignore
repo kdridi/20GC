@@ -1,0 +1,23 @@
+# Fichiers de build
+build/
+pong
+
+# Coverage
+*.gcda
+*.gcno
+*.gcov
+coverage.info
+coverage_report/
+
+# Precompiled headers
+*.gch
+
+# IDE
+.vscode/
+.cache/
+
+# Fichiers temporaires
+*.swp
+*.swo
+*~
+.DS_Store

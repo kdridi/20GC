@@ -1,0 +1,6 @@
+{
+	"files.associations": {
+		"entity.h": "c",
+		"pch.h": "c"
+	}
+}

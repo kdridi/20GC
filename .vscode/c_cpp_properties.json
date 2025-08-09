@@ -1,0 +1,45 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/01_pong/include",
+                "/opt/homebrew/include",
+                "/opt/homebrew/include/SDL2",
+                "/opt/homebrew/Cellar/googletest/1.17.0/include",
+                "/usr/local/include",
+                "/usr/include"
+            ],
+            "defines": [
+                "DEBUG",
+                "_THREAD_SAFE",
+                "GTEST_HAS_PTHREAD=1"
+            ],
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c23",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-gcc-arm64",
+            "forcedInclude": [
+                "${workspaceFolder}/01_pong/include/pch.h"
+            ],
+            "compilerArgs": [
+                "-Wall",
+                "-Wextra",
+                "-Werror",
+                "-Wpedantic"
+            ],
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**",
+                    "/opt/homebrew/include/**"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}
