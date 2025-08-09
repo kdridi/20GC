@@ -32,14 +32,17 @@ void collision_system_update()
 
         const GameConfig *const config = game_config_get_current();
 
-        // Collision avec les murs (limites horizontales)
-        if (pos->x <= 0.0f && vel->dx < 0.0f) {
-            vel->dx = -vel->dx; // Inverser la vitesse X
-            pos->x = 0.0f;      // Corriger la position
-        } else if (pos->x >= (float) config->screen_width && vel->dx > 0.0f) {
-            vel->dx = -vel->dx;
-            pos->x = (float) config->screen_width;
+        // Collision avec les murs verticaux (haut/bas) - la balle rebondit
+        if (pos->y <= ball->radius && vel->dy < 0.0f) {
+            vel->dy = -vel->dy;    // Inverser la vitesse Y
+            pos->y = ball->radius; // Corriger la position
+        } else if (pos->y >= (float) config->screen_height - ball->radius && vel->dy > 0.0f) {
+            vel->dy = -vel->dy;
+            pos->y = (float) config->screen_height - ball->radius;
         }
+
+        // NOTE: Pas de collision avec les murs horizontaux (gauche/droite)
+        // La balle doit pouvoir sortir pour marquer des points
 
         // Collision avec les paddles
         collision_check_ball_paddle(entity, pos, vel, ball);
@@ -62,24 +65,34 @@ static void collision_check_ball_paddle(Entity *const ball_entity, Position *con
             continue;
 
         // Détection de collision AABB (Axis-Aligned Bounding Box)
-        // Balle comme rectangle de taille (radius*2, radius*2)
-        const float ball_width = ball->radius * 2.0f;
-        const float ball_height = ball->radius * 2.0f;
+        // Position = centre des objets, convertir en coins pour collision
+        const float ball_left = ball_pos->x - ball->radius;
+        const float ball_right = ball_pos->x + ball->radius;
+        const float ball_top = ball_pos->y - ball->radius;
+        const float ball_bottom = ball_pos->y + ball->radius;
 
-        const bool collision = (ball_pos->x < paddle_pos->x + paddle->width) &&
-                               (ball_pos->x + ball_width > paddle_pos->x) &&
-                               (ball_pos->y < paddle_pos->y + paddle->height) &&
-                               (ball_pos->y + ball_height > paddle_pos->y);
+        const float paddle_left = paddle_pos->x - paddle->width / 2.0f;
+        const float paddle_right = paddle_pos->x + paddle->width / 2.0f;
+        const float paddle_top = paddle_pos->y - paddle->height / 2.0f;
+        const float paddle_bottom = paddle_pos->y + paddle->height / 2.0f;
+
+        const bool collision = (ball_right > paddle_left) &&
+                               (ball_left < paddle_right) &&
+                               (ball_bottom > paddle_top) &&
+                               (ball_top < paddle_bottom);
 
         if (collision) {
             // Rebond horizontal
             ball_vel->dx = -ball_vel->dx;
 
             // Corriger la position pour éviter la pénétration
+            // Position = centre, donc ajuster depuis le centre du paddle
             if (ball_vel->dx > 0.0f) {
-                ball_pos->x = paddle_pos->x + paddle->width;
+                // Balle va vers la droite, placer à droite du paddle
+                ball_pos->x = paddle_right + ball->radius;
             } else {
-                ball_pos->x = paddle_pos->x - ball->radius * 2.0f;
+                // Balle va vers la gauche, placer à gauche du paddle
+                ball_pos->x = paddle_left - ball->radius;
             }
         }
     }

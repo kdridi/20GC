@@ -15,7 +15,7 @@ static void test_game_config_default_values(void)
     // Vérifier les dimensions des paddles
     assert(FLOAT_EQ(config->paddle_width, 12.0f));
     assert(FLOAT_EQ(config->paddle_height, 80.0f));
-    assert(FLOAT_EQ(config->paddle_speed, 300.0f));
+    assert(FLOAT_EQ(config->paddle_speed, 600.0f)); // Nouvelle vitesse 2x plus rapide
 
     // Vérifier les positions initiales des paddles
     assert(FLOAT_EQ(config->player1_x, 50.0f));

@@ -13,22 +13,22 @@ static void test_collision_system_ball_wall_bounce()
     Entity *const entity = entity_create();
     assert(entity != NULL);
 
-    // Créer une balle qui va vers la gauche (hors limites)
-    Position *const pos = position_add(entity, -5.0f, 300.0f); // X négatif = hors écran
-    Velocity *const vel = velocity_add(entity, -100.0f, 0.0f); // Vitesse vers la gauche
+    // Créer une balle qui va vers le haut (hors limites)
+    Position *const pos = position_add(entity, 300.0f, -5.0f); // Y négatif = hors écran (haut)
+    Velocity *const vel = velocity_add(entity, 0.0f, -100.0f); // Vitesse vers le haut
     Ball *const ball = ball_add(entity, 4.0f);
     assert(pos != NULL && vel != NULL && ball != NULL);
 
     // Vérifier état initial
-    assert(FLOAT_EQ(pos->x, -5.0f));
-    assert(FLOAT_EQ(vel->dx, -100.0f));
+    assert(FLOAT_EQ(pos->y, -5.0f));
+    assert(FLOAT_EQ(vel->dy, -100.0f));
 
     // Appliquer le système collision
     collision_system_update();
 
-    // Vérifier que la balle a rebondi (vitesse inversée en X)
-    assert(vel->dx > 0.0f); // Vitesse maintenant vers la droite
-    assert(pos->x >= 0.0f); // Position corrigée dans l'écran
+    // Vérifier que la balle a rebondi (vitesse inversée en Y)
+    assert(vel->dy > 0.0f);         // Vitesse maintenant vers le bas
+    assert(pos->y >= ball->radius); // Position corrigée dans l'écran
 
     printf("✅ collision_system_update() ball-wall : OK\n");
 }

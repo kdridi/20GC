@@ -33,43 +33,60 @@ Le 20 Games Challenge est un défi d'apprentissage du développement de jeux vid
 
 ## Progression du projet
 
-### Phase actuelle : Pong (01_pong)
+### Phase complétée : Pong (01_pong) ✅
 
 #### Architecture ECS complète ✅
 - **Entités** : Pool statique avec IDs uniques, gestion transparente
 - **Composants** : Position, Velocity, Ball, Paddle, Score, GameState avec Structure of Arrays (SoA)
-- **Systèmes** : Movement, Bounds, Collision, Input, Scoring, Reset - tous fonctionnels
+- **Systèmes** : Movement, Bounds, Collision, Input, Scoring, Reset - tous fonctionnels et optimisés
 - **Entity Factory** : Helpers pour création d'entités complètes (create_player, create_pong_game)
-- **Game Config** : Système de configuration centralisé pour toutes les constantes du jeu ✅
-- **Tests TDD** : 18 tests atomiques passants, approche simple sans frameworks
+- **Game Config** : Système de configuration centralisé éliminant tous les magic constants ✅
+- **Tests TDD** : 19 tests atomiques passants, approche simple sans frameworks
 
 #### Infrastructure de build ✅
 - **Makefile** : Compilation avec warnings stricts, sanitizers, coverage
-- **Dépendances** : SDL2 uniquement (approche simple sans frameworks externes)
-- **Tests** : Approche TDD pure avec `assert()` et `printf()` 
+- **Dépendances** : SDL2 uniquement, intégration PCH optimisée pour warnings
+- **Tests** : Approche TDD pure avec `assert()` et `printf()`, exclusion main.o pour éviter conflits
 - **Formatage** : clang-format + git hooks automatiques
-- **PCH** : Headers précompilés pour accélération du build
+- **PCH** : Headers précompilés avec SDL2 intégré et pragmas pour warnings stricts
 
-#### Systèmes de jeu implémentés ✅
-- **Movement System** : Applique velocity à position avec delta_time
-- **Bounds System** : Maintient les paddles dans les limites d'écran
-- **Collision System** : Gère collisions balle-paddle et balle-murs avec rebonds
-- **Input System** : Contrôles des paddles avec actions métier (PLAYER1_PADDLE_UP, etc.)
-- **Scoring System** : Détection points par position des balles et identification joueurs
-- **Reset System** : Remise au centre de la balle après point marqué
+#### SDL2 et Gameplay ✅
+- **Rendu** : Interface graphique complète avec SDL2, rectangles blancs pour paddles/balle
+- **Contrôles** : Player 1 (W/S ou flèches), Player 2 (I/K), ESC pour quitter
+- **Physique** : Collision précise balle-paddle, rebond vertical (haut/bas), traversée horizontale pour points
+- **Scoring** : Détection et affichage des scores en temps réel dans la console
+- **Performance** : Boucle de jeu 60 FPS avec delta time, paddles réactifs (600px/s)
+- **Système de coordonnées** : Cohérence totale entre rendu SDL2 et collision ECS (position = centre)
 
-#### Prochaines étapes
-- [x] Système Score et Game State ✅
-- [x] Reset de partie et gestion de points ✅
+#### Systèmes de jeu optimisés ✅
+- **Movement System** : Applique velocity à position avec delta_time précis
+- **Bounds System** : Maintient les paddles dans les limites d'écran uniquement
+- **Collision System** : Rebond vertical (haut/bas), collision balle-paddle précise, pas de rebond horizontal
+- **Input System** : Contrôles des paddles avec actions métier et reset des états
+- **Scoring System** : Détection points par sortie gauche/droite, identification par position paddle
+- **Reset System** : Remise au centre de la balle après chaque point marqué
+
+#### Accomplissements techniques ✅
+- [x] Système Score et Game State complets ✅
+- [x] Reset de partie et gestion de points ✅ 
 - [x] Entity Factory pour création simplifiée ✅
 - [x] Système de configuration GameConfig ✅
-- [ ] Tests d'intégration (simulation de parties complètes)
-- [ ] Intégration SDL2 complète (rendu, événements clavier)
-- [ ] Boucle de jeu principale (main.c)
-- [ ] Jeu Pong complet et jouable
+- [x] Intégration SDL2 complète (rendu, événements clavier) ✅
+- [x] Boucle de jeu principale fonctionnelle ✅
+- [x] **Jeu Pong complet et parfaitement jouable** ✅
+- [x] Correction des bugs collision et physique ✅
+- [x] Optimisation vitesse paddles et responsivité ✅
 
 ### Jeux à venir
-- [x] **01_pong** - Architecture ECS complète avec systèmes Score ✅
-- [ ] **02_flappy_bird** - Planifié après extraction patterns
+- [x] **01_pong** - Jeu complet et jouable avec architecture ECS robuste ✅
+- [ ] **02_flappy_bird** - Prêt pour implémentation après extraction des patterns réutilisables
 - [ ] **03_breakout** - Planifié
 - [ ] *(autres jeux selon la progression)*
+
+### Leçons apprises
+- **TDD efficace** : 19 tests atomiques permettent refactoring en toute confiance
+- **Architecture ECS** : Modularité excellente, ajout/modification de systèmes sans casse
+- **GameConfig centralisé** : Élimination des magic constants facilite le tuning gameplay
+- **Système coordonnées** : Cohérence rendu/collision critique pour physique précise
+- **SDL2 minimaliste** : Approche simple mais efficace pour prototypage rapide
+- **Makefile sophistiqué** : Build robuste avec warnings stricts, sanitizers, tests parallèles

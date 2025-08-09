@@ -10,7 +10,7 @@ static const GameConfig default_config = {
     // Configuration des paddles
     .paddle_width = 12.0f,
     .paddle_height = 80.0f,
-    .paddle_speed = 300.0f, // Pixels par seconde
+    .paddle_speed = 600.0f, // Pixels par seconde (2x plus rapide)
 
     // Positions initiales des joueurs
     .player1_x = 50.0f,  // Joueur 1 à gauche

@@ -47,6 +47,8 @@ LIBS = $(SDL2_LIBS)
 PROD_SOURCES = $(wildcard $(SRCDIR)/*.c)
 TEST_SOURCES = $(wildcard $(TESTDIR)/*.c)
 PROD_OBJECTS = $(PROD_SOURCES:$(SRCDIR)/%.c=$(BUILDDIR)/prod/%.o)
+# Objets pour les tests : exclure main.o qui contient main()
+TEST_LIB_OBJECTS = $(filter-out $(BUILDDIR)/prod/main.o, $(PROD_OBJECTS))
 TEST_OBJECTS = $(TEST_SOURCES:$(TESTDIR)/%.c=$(BUILDDIR)/test/%.o)
 TEST_TARGETS = $(TEST_SOURCES:$(TESTDIR)/%.c=$(BUILDDIR)/%)
 
@@ -95,7 +97,7 @@ $(TARGET): $(PROD_OBJECTS)
 	$(CC) $^ $(SDL2_LIBS) $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
 
 # Règle pour compiler chaque test individuellement
-$(BUILDDIR)/test_%: $(BUILDDIR)/test/test_%.o $(PROD_OBJECTS)
+$(BUILDDIR)/test_%: $(BUILDDIR)/test/test_%.o $(TEST_LIB_OBJECTS)
 	$(CC) $^ $(LIBS) $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -lstdc++ -o $@
 
 # Compilation des objets de production
