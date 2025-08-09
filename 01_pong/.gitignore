@@ -1,6 +1,7 @@
 # Fichiers de build
 build/
 pong
+pong_*
 
 # Coverage
 *.gcda

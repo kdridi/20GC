@@ -52,20 +52,26 @@ TEST_LIB_OBJECTS = $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_nc
 TEST_OBJECTS = $(TEST_SOURCES:$(TESTDIR)/%.c=$(BUILDDIR)/test/%.o)
 TEST_TARGETS = $(TEST_SOURCES:$(TESTDIR)/%.c=$(BUILDDIR)/%)
 
-# Cibles principales
-TARGET = pong
+# Cibles principales  
+TARGET_SDL2 = pong_sdl2
 TARGET_NCURSES = pong_ncurses
 
-.PHONY: all clean test format dirs pch debug release coverage deps help
+# Backends disponibles
+BACKENDS = sdl2 ncurses
 
-all: dirs pch $(TARGET)
+.PHONY: all clean test format dirs pch debug release coverage deps help $(BACKENDS)
 
+# Build tous les backends par défaut
+all: $(BACKENDS)
+
+# Backends
+sdl2: dirs pch $(TARGET_SDL2)
 ncurses: dirs pch $(TARGET_NCURSES)
 
-debug: dirs pch $(TARGET)
+debug: all
 
 release:
-	$(MAKE) RELEASE=1 $(TARGET)
+	$(MAKE) RELEASE=1 all
 
 test: dirs pch $(TEST_TARGETS)
 	@for test in $(TEST_TARGETS); do \
@@ -95,13 +101,17 @@ pch: dirs $(PCH_OUT)
 $(PCH_OUT): $(PCH_FILE)
 	$(CC) $(PROD_CFLAGS) -c $< -o $@
 
-# Compilation de l'exécutable principal SDL2
-$(TARGET): $(filter-out $(BUILDDIR)/prod/main_ncurses.o, $(PROD_OBJECTS))
+# Exécutable SDL2
+$(TARGET_SDL2): $(filter-out $(BUILDDIR)/prod/main_ncurses.o, $(PROD_OBJECTS))
 	$(CC) $^ $(SDL2_LIBS) $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
 
-# Compilation de l'exécutable ncurses  
+# Exécutable ncurses  
 $(TARGET_NCURSES): $(filter-out $(BUILDDIR)/prod/main.o, $(PROD_OBJECTS))
 	$(CC) $^ -lncurses $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
+
+# Lien de compatibilité (optionnel)
+pong: $(TARGET_SDL2)
+	@ln -sf $(TARGET_SDL2) pong
 
 # Règle pour compiler chaque test individuellement
 $(BUILDDIR)/test_%: $(BUILDDIR)/test/test_%.o $(TEST_LIB_OBJECTS)
@@ -121,25 +131,31 @@ format:
 
 # Nettoyage
 clean:
-	rm -rf $(BUILDDIR) $(TARGET) $(TARGET_NCURSES) $(PCH_OUT) $(COVERAGE_DIR) coverage.info *.gcda *.gcno
+	rm -rf $(BUILDDIR) pong $(TARGET_SDL2) $(TARGET_NCURSES) $(PCH_OUT) $(COVERAGE_DIR) coverage.info *.gcda *.gcno
 
 # Aide
 help:
-	@echo "Cibles disponibles :"
+	@echo "🎯 Cibles de compilation :"
 	@echo "  all/debug - Compile Pong SDL2 en mode debug (avec sanitizers)"
-	@echo "  ncurses   - Compile Pong ncurses (version terminale)"
 	@echo "  release   - Compile en mode release optimisé"
-	@echo "  test      - Compile et exécute les tests"
+	@echo "  test      - Compile et exécute les tests TDD"
 	@echo "  coverage  - Exécute les tests et génère le rapport de coverage"
+	@echo ""
+	@echo "🎮 Backends graphiques disponibles :"
+	@echo "  sdl2      - Version SDL2 (graphique, fenêtrée)"
+	@echo "  ncurses   - Version ncurses (terminal, ASCII)"
+	@echo ""
+	@echo "🔧 Utilitaires :"
 	@echo "  format    - Formate le code avec clang-format"
 	@echo "  deps      - Vérifie les dépendances système"
 	@echo "  clean     - Nettoie les fichiers de build"
 	@echo "  help      - Affiche cette aide"
 	@echo ""
-	@echo "Versions disponibles :"
-	@echo "  ./pong         - Version SDL2 (graphique)"
-	@echo "  ./pong_ncurses - Version ncurses (terminal)"
+	@echo "📦 Exécutables générés :"
+	@echo "  ./pong_sdl2    - Version SDL2"
+	@echo "  ./pong_ncurses - Version ncurses"
+	@echo "  ./pong         - Lien symbolique vers pong_sdl2"
 	@echo ""
-	@echo "Variables :"
-	@echo "  RELEASE=1  - Active le mode release"
-	@echo "  COVERAGE=1 - Active le mode coverage"
+	@echo "⚙️ Variables de build :"
+	@echo "  RELEASE=1  - Active le mode release (-O3 -flto)"
+	@echo "  COVERAGE=1 - Active le mode coverage (gcov/lcov)"
