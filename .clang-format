@@ -24,8 +24,9 @@ BraceWrapping:
 AlignConsecutiveDeclarations: false
 AlignConsecutiveAssignments: false
 SpaceAfterCStyleCast: true
-AlwaysBreakAfterReturnType: TopLevel
-PointerAlignment: Left
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+PointerAlignment: Right
 
 # Respect des contraintes (fonctions courtes)
 AllowShortFunctionsOnASingleLine: None

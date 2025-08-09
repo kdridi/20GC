@@ -2,10 +2,9 @@
 
 #include "entity.h"
 
-static void
-test_entity_destroy()
+static void test_entity_destroy()
 {
-    Entity* const entity = entity_create();
+    Entity *const entity = entity_create();
     assert(entity != NULL);
 
     entity_destroy(entity);
@@ -16,8 +15,7 @@ test_entity_destroy()
     printf("✅ entity_destroy() : OK\n");
 }
 
-int
-main()
+int main()
 {
     printf("🧪 Test TDD : entity_destroy()\n");
     test_entity_destroy();

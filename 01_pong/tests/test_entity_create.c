@@ -3,10 +3,9 @@
 
 #include "entity.h"
 
-static void
-test_entity_create()
+static void test_entity_create()
 {
-    Entity* const entity = entity_create();
+    Entity *const entity = entity_create();
 
     // Vérification du comportement attendu
     assert(entity != NULL);
@@ -16,8 +15,7 @@ test_entity_create()
     printf("✅ entity_create() : OK\n");
 }
 
-int
-main()
+int main()
 {
     printf("🧪 Test TDD : entity_create()\n");
     test_entity_create();

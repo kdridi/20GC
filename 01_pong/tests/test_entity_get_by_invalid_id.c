@@ -2,10 +2,9 @@
 
 #include "entity.h"
 
-static void
-test_entity_get_by_invalid_id()
+static void test_entity_get_by_invalid_id()
 {
-    Entity* const found = entity_get_by_id(99999);
+    Entity *const found = entity_get_by_id(99999);
 
     // ID invalide doit retourner NULL
     assert(found == NULL);
@@ -13,8 +12,7 @@ test_entity_get_by_invalid_id()
     printf("✅ entity_get_by_id() invalid ID : OK\n");
 }
 
-int
-main()
+int main()
 {
     printf("🧪 Test TDD : entity_get_by_id() - ID invalide\n");
     test_entity_get_by_invalid_id();

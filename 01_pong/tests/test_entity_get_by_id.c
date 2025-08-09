@@ -2,13 +2,12 @@
 
 #include "entity.h"
 
-static void
-test_entity_get_by_id()
+static void test_entity_get_by_id()
 {
-    Entity* const entity = entity_create();
+    Entity *const entity = entity_create();
     const uint32_t id = entity_get_id(entity);
 
-    Entity* const found = entity_get_by_id(id);
+    Entity *const found = entity_get_by_id(id);
 
     // Doit retrouver la même entité
     assert(found == entity);
@@ -18,8 +17,7 @@ test_entity_get_by_id()
     printf("✅ entity_get_by_id() : OK\n");
 }
 
-int
-main()
+int main()
 {
     printf("🧪 Test TDD : entity_get_by_id()\n");
     test_entity_get_by_id();

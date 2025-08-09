@@ -9,8 +9,7 @@ struct Entity {
 };
 
 // Getter du pool avec initialisation automatique
-static struct Entity*
-get_pool()
+static struct Entity *get_pool()
 {
     static struct Entity pool[MAX_ENTITIES];
     static bool initialized = false;
@@ -24,10 +23,9 @@ get_pool()
 }
 
 // Trouve un slot libre (fonction privée)
-static bool
-find_free_slot(uint32_t* const slot_index)
+static bool find_free_slot(uint32_t *const slot_index)
 {
-    struct Entity* const pool = get_pool();
+    struct Entity *const pool = get_pool();
 
     for (uint32_t i = 0; i < MAX_ENTITIES; i++) {
         if (pool[i].active)
@@ -43,10 +41,9 @@ find_free_slot(uint32_t* const slot_index)
 }
 
 // Trouve un slot par ID (fonction privée)
-static bool
-find_slot_by_id(const uint32_t id, uint32_t* const slot_index)
+static bool find_slot_by_id(const uint32_t id, uint32_t *const slot_index)
 {
-    struct Entity* const pool = get_pool();
+    struct Entity *const pool = get_pool();
 
     for (uint32_t i = 0; i < MAX_ENTITIES; i++) {
         if (!pool[i].active || pool[i].id != id)
@@ -64,8 +61,7 @@ find_slot_by_id(const uint32_t id, uint32_t* const slot_index)
 // FONCTIONS PUBLIQUES
 // ============================================================================
 
-Entity*
-entity_create()
+Entity *entity_create()
 {
     uint32_t slot_index = 0;
     const bool found = find_free_slot(&slot_index);
@@ -73,8 +69,8 @@ entity_create()
     // Avec données statiques, pas de slot libre = bug de conception
     assert(found && "Impossible de créer une entité - pool plein");
 
-    struct Entity* const pool = get_pool();
-    struct Entity* const entity = &pool[slot_index];
+    struct Entity *const pool = get_pool();
+    struct Entity *const entity = &pool[slot_index];
 
     // Générateur d'ID statique
     static uint32_t next_id = 1;
@@ -85,8 +81,7 @@ entity_create()
     return entity;
 }
 
-void
-entity_destroy(Entity* const entity)
+void entity_destroy(Entity *const entity)
 {
     assert(entity != NULL && "Entity à détruire ne peut pas être NULL");
 
@@ -94,8 +89,7 @@ entity_destroy(Entity* const entity)
     memset(entity, 0, sizeof(struct Entity));
 }
 
-Entity*
-entity_get_by_id(const uint32_t id)
+Entity *entity_get_by_id(const uint32_t id)
 {
     uint32_t slot_index = 0;
     const bool found = find_slot_by_id(id, &slot_index);
@@ -103,14 +97,13 @@ entity_get_by_id(const uint32_t id)
     if (!found)
         return NULL;
 
-    struct Entity* const pool = get_pool();
+    struct Entity *const pool = get_pool();
     return &pool[slot_index];
 }
 
-uint32_t
-entity_count_active()
+uint32_t entity_count_active()
 {
-    struct Entity* const pool = get_pool();
+    struct Entity *const pool = get_pool();
     uint32_t count = 0;
 
     for (uint32_t i = 0; i < MAX_ENTITIES; i++) {
@@ -123,15 +116,13 @@ entity_count_active()
     return count;
 }
 
-uint32_t
-entity_get_id(const Entity* const entity)
+uint32_t entity_get_id(const Entity *const entity)
 {
     assert(entity != NULL && "Entity ne peut pas être NULL");
     return entity->id;
 }
 
-bool
-entity_is_active(const Entity* const entity)
+bool entity_is_active(const Entity *const entity)
 {
     assert(entity != NULL && "Entity ne peut pas être NULL");
     return entity->active;
