@@ -37,6 +37,8 @@ COVERAGE_DIR = coverage_report
 # Bibliothèques via pkg-config
 SDL2_CFLAGS = $(shell pkg-config --cflags sdl2)
 SDL2_LIBS = $(shell pkg-config --libs sdl2)
+RAYLIB_CFLAGS = $(shell pkg-config --cflags raylib)
+RAYLIB_LIBS = $(shell pkg-config --libs raylib)
 
 # Flags complètes
 PROD_CFLAGS = $(CFLAGS) $(SDL2_CFLAGS) -I$(INCDIR)
@@ -47,17 +49,18 @@ LIBS = $(SDL2_LIBS)
 PROD_SOURCES = $(wildcard $(SRCDIR)/*.c)
 TEST_SOURCES = $(wildcard $(TESTDIR)/*.c)
 PROD_OBJECTS = $(PROD_SOURCES:$(SRCDIR)/%.c=$(BUILDDIR)/prod/%.o)
-# Objets pour les tests : exclure main.o et main_ncurses.o qui contiennent main()
-TEST_LIB_OBJECTS = $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_ncurses.o, $(PROD_OBJECTS))
+# Objets pour les tests : exclure tous les main*.o qui contiennent main()
+TEST_LIB_OBJECTS = $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_raylib.o, $(PROD_OBJECTS))
 TEST_OBJECTS = $(TEST_SOURCES:$(TESTDIR)/%.c=$(BUILDDIR)/test/%.o)
 TEST_TARGETS = $(TEST_SOURCES:$(TESTDIR)/%.c=$(BUILDDIR)/%)
 
 # Cibles principales  
 TARGET_SDL2 = pong_sdl2
 TARGET_NCURSES = pong_ncurses
+TARGET_RAYLIB = pong_raylib
 
 # Backends disponibles
-BACKENDS = sdl2 ncurses
+BACKENDS = sdl2 ncurses raylib
 
 .PHONY: all clean test format dirs pch debug release coverage deps help $(BACKENDS)
 
@@ -67,6 +70,7 @@ all: $(BACKENDS)
 # Backends
 sdl2: dirs pch $(TARGET_SDL2)
 ncurses: dirs pch $(TARGET_NCURSES)
+raylib: dirs pch $(TARGET_RAYLIB)
 
 debug: all
 
@@ -102,12 +106,16 @@ $(PCH_OUT): $(PCH_FILE)
 	$(CC) $(PROD_CFLAGS) -c $< -o $@
 
 # Exécutable SDL2
-$(TARGET_SDL2): $(filter-out $(BUILDDIR)/prod/main_ncurses.o, $(PROD_OBJECTS))
+$(TARGET_SDL2): $(filter-out $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_raylib.o, $(PROD_OBJECTS))
 	$(CC) $^ $(SDL2_LIBS) $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
 
 # Exécutable ncurses  
-$(TARGET_NCURSES): $(filter-out $(BUILDDIR)/prod/main.o, $(PROD_OBJECTS))
+$(TARGET_NCURSES): $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_raylib.o, $(PROD_OBJECTS))
 	$(CC) $^ -lncurses $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
+
+# Exécutable Raylib
+$(TARGET_RAYLIB): $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_ncurses.o, $(PROD_OBJECTS))
+	$(CC) $^ $(RAYLIB_LIBS) $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
 
 # Lien de compatibilité (optionnel)
 pong: $(TARGET_SDL2)
@@ -131,7 +139,7 @@ format:
 
 # Nettoyage
 clean:
-	rm -rf $(BUILDDIR) pong $(TARGET_SDL2) $(TARGET_NCURSES) $(PCH_OUT) $(COVERAGE_DIR) coverage.info *.gcda *.gcno
+	rm -rf $(BUILDDIR) pong $(TARGET_SDL2) $(TARGET_NCURSES) $(TARGET_RAYLIB) $(PCH_OUT) $(COVERAGE_DIR) coverage.info *.gcda *.gcno
 
 # Aide
 help:
@@ -144,6 +152,7 @@ help:
 	@echo "🎮 Backends graphiques disponibles :"
 	@echo "  sdl2      - Version SDL2 (graphique, fenêtrée)"
 	@echo "  ncurses   - Version ncurses (terminal, ASCII)"
+	@echo "  raylib    - Version Raylib (moderne, hardware accelerated)"
 	@echo ""
 	@echo "🔧 Utilitaires :"
 	@echo "  format    - Formate le code avec clang-format"
@@ -154,6 +163,7 @@ help:
 	@echo "📦 Exécutables générés :"
 	@echo "  ./pong_sdl2    - Version SDL2"
 	@echo "  ./pong_ncurses - Version ncurses"
+	@echo "  ./pong_raylib  - Version Raylib"
 	@echo "  ./pong         - Lien symbolique vers pong_sdl2"
 	@echo ""
 	@echo "⚙️ Variables de build :"

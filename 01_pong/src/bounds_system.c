@@ -26,9 +26,9 @@ void bounds_system_update()
             const GameConfig *const config = game_config_get_current();
 
             // Contraindre le paddle dans les limites verticales
-            // Le paddle ne peut pas dépasser le haut ou le bas de l'écran
-            const float min_y = 0.0f;
-            const float max_y = (float) config->screen_height - paddle->height;
+            // Position = centre du paddle, donc ajuster avec la demi-hauteur
+            const float min_y = paddle->height / 2.0f;
+            const float max_y = (float) config->screen_height - paddle->height / 2.0f;
 
             if (pos->y < min_y)
                 pos->y = min_y;

@@ -23,8 +23,9 @@ static void test_bounds_system_paddle()
     bounds_system_update();
 
     // Vérifier que le paddle est maintenu dans les limites
-    // SCREEN_HEIGHT = 600, paddle height = 60, donc max Y = 540
-    assert(pos->y <= 540.0f);
+    // SCREEN_HEIGHT = 600, paddle height = 60, position = centre
+    // donc max Y = 600 - 60/2 = 570
+    assert(pos->y <= 570.0f);
 
     printf("✅ bounds_system_update() paddle : OK\n");
 }
