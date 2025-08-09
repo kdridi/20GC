@@ -47,17 +47,20 @@ LIBS = $(SDL2_LIBS)
 PROD_SOURCES = $(wildcard $(SRCDIR)/*.c)
 TEST_SOURCES = $(wildcard $(TESTDIR)/*.c)
 PROD_OBJECTS = $(PROD_SOURCES:$(SRCDIR)/%.c=$(BUILDDIR)/prod/%.o)
-# Objets pour les tests : exclure main.o qui contient main()
-TEST_LIB_OBJECTS = $(filter-out $(BUILDDIR)/prod/main.o, $(PROD_OBJECTS))
+# Objets pour les tests : exclure main.o et main_ncurses.o qui contiennent main()
+TEST_LIB_OBJECTS = $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_ncurses.o, $(PROD_OBJECTS))
 TEST_OBJECTS = $(TEST_SOURCES:$(TESTDIR)/%.c=$(BUILDDIR)/test/%.o)
 TEST_TARGETS = $(TEST_SOURCES:$(TESTDIR)/%.c=$(BUILDDIR)/%)
 
 # Cibles principales
 TARGET = pong
+TARGET_NCURSES = pong_ncurses
 
 .PHONY: all clean test format dirs pch debug release coverage deps help
 
 all: dirs pch $(TARGET)
+
+ncurses: dirs pch $(TARGET_NCURSES)
 
 debug: dirs pch $(TARGET)
 
@@ -92,9 +95,13 @@ pch: dirs $(PCH_OUT)
 $(PCH_OUT): $(PCH_FILE)
 	$(CC) $(PROD_CFLAGS) -c $< -o $@
 
-# Compilation de l'exécutable principal
-$(TARGET): $(PROD_OBJECTS)
+# Compilation de l'exécutable principal SDL2
+$(TARGET): $(filter-out $(BUILDDIR)/prod/main_ncurses.o, $(PROD_OBJECTS))
 	$(CC) $^ $(SDL2_LIBS) $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
+
+# Compilation de l'exécutable ncurses  
+$(TARGET_NCURSES): $(filter-out $(BUILDDIR)/prod/main.o, $(PROD_OBJECTS))
+	$(CC) $^ -lncurses $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
 
 # Règle pour compiler chaque test individuellement
 $(BUILDDIR)/test_%: $(BUILDDIR)/test/test_%.o $(TEST_LIB_OBJECTS)
@@ -114,12 +121,13 @@ format:
 
 # Nettoyage
 clean:
-	rm -rf $(BUILDDIR) $(TARGET) $(PCH_OUT) $(COVERAGE_DIR) coverage.info *.gcda *.gcno
+	rm -rf $(BUILDDIR) $(TARGET) $(TARGET_NCURSES) $(PCH_OUT) $(COVERAGE_DIR) coverage.info *.gcda *.gcno
 
 # Aide
 help:
 	@echo "Cibles disponibles :"
-	@echo "  all/debug - Compile en mode debug (avec sanitizers)"
+	@echo "  all/debug - Compile Pong SDL2 en mode debug (avec sanitizers)"
+	@echo "  ncurses   - Compile Pong ncurses (version terminale)"
 	@echo "  release   - Compile en mode release optimisé"
 	@echo "  test      - Compile et exécute les tests"
 	@echo "  coverage  - Exécute les tests et génère le rapport de coverage"
@@ -127,6 +135,10 @@ help:
 	@echo "  deps      - Vérifie les dépendances système"
 	@echo "  clean     - Nettoie les fichiers de build"
 	@echo "  help      - Affiche cette aide"
+	@echo ""
+	@echo "Versions disponibles :"
+	@echo "  ./pong         - Version SDL2 (graphique)"
+	@echo "  ./pong_ncurses - Version ncurses (terminal)"
 	@echo ""
 	@echo "Variables :"
 	@echo "  RELEASE=1  - Active le mode release"
