@@ -34,14 +34,27 @@ Le 20 Games Challenge est un défi d'apprentissage du développement de jeux vid
 ## Progression du projet
 
 ### Phase actuelle : Pong (01_pong)
-Implémentation du premier jeu avec :
-- Architecture ECS de base
-- Approche TDD complète
-- Makefile + SDL2 + GTest/GMock
-- Extraction des patterns réutilisables
+
+#### Architecture ECS implémentée ✅
+- **Entités** : Pool statique avec IDs uniques, gestion transparente
+- **Composants** : Position et Velocity avec Structure of Arrays (SoA) pour performance
+- **Systèmes** : Movement system combinant Position + Velocity
+- **Tests TDD** : Couverture 94.2% avec tests atomiques (un fichier = un test)
+
+#### Infrastructure de build ✅
+- **Makefile** : Compilation avec warnings stricts, sanitizers, coverage
+- **Dépendances** : SDL2 uniquement (GTest/GMock retirés pour simplicité)
+- **Tests** : Approche simple avec `assert()` et `printf()` 
+- **Formatage** : clang-format + git hooks automatiques
+- **PCH** : Headers précompilés pour accélération du build
+
+#### Prochain étapes
+- [ ] Composants spécifiques Pong (Ball, Paddle)
+- [ ] Systèmes collision et rendu
+- [ ] Intégration SDL2 complète
 
 ### Jeux à venir
-- [ ] **01_pong** - En développement
-- [ ] **02_flappy_bird** - Planifié
+- [x] **01_pong** - Architecture ECS de base implementée
+- [ ] **02_flappy_bird** - Planifié après extraction patterns
 - [ ] **03_breakout** - Planifié
 - [ ] *(autres jeux selon la progression)*

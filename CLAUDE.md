@@ -30,9 +30,10 @@ Ce fichier fournit des conseils à Claude Code (claude.ai/code) lors du travail 
 - Privilégier l'utilisation de structures de données comme paramètres d'entrée
 
 ### Tests unitaires
-- **Utilisation obligatoire de mocking** pour isoler les unités testées
+- **Tests atomiques** : Un fichier de test = une fonction testée
+- **Approche simple** : `assert()` et `printf()` au lieu de frameworks lourds
 - **Structures de données en entrée** pour les tests
-- Couverture complète de tous les composants et systèmes
+- **Couverture complète** de tous les composants et systèmes
 
 ### Gestion des ressources
 - **Aucune allocation dynamique** (pas de malloc/free)
@@ -47,14 +48,15 @@ Ce fichier fournit des conseils à Claude Code (claude.ai/code) lors du travail 
 
 **Structure par jeu** : Chaque jeu dans son propre répertoire (01_pong, 02_flappy_bird, etc.)
 
-**Outils de build** : Makefile simple + pkg-config pour SDL2, GTest, GMock
+**Outils de build** : Makefile simple + pkg-config pour SDL2 uniquement
 
 **Organisation des includes** : 
-- **PCH (Precompiled Headers)** pour toutes les bibliothèques externes (SDL2, GTest, GMock, etc.)
+- **PCH (Precompiled Headers)** pour toutes les bibliothèques externes (SDL2, etc.)
 - **Includes relatifs** (`#include "xxx.h"`) uniquement pour le code local du projet
 - **Header guards** : Utilisation de `#pragma once` pour tous les fichiers .h
 - **Formatage** : Configuration `.clang-format` pour un style de code cohérent
 - **Coverage** : Intégration de la couverture de code avec lcov/gcov
+- **Tests simples** : Approche avec `assert()` et `printf()` au lieu de frameworks lourds
 - **Scripts de test d'environnement** : Scripts bash pour vérifier la disponibilité des outils (approche macOS d'abord, portabilité ensuite)
 
 ## Style de code et conventions
@@ -76,19 +78,21 @@ Ce fichier fournit des conseils à Claude Code (claude.ai/code) lors du travail 
 
 ## État actuel
 
-Projet Pong en développement actif :
-- **Infrastructure** : Makefile, PCH, scripts de dépendances, constants.h
-- **Tests TDD** : Tests atomiques pour système d'entités (un test = un fichier)
-- **Pool d'entités** : Implémentation avec structure opaque et pool statique
-- **En cours** : Implémentation des fonctions publiques entity_*
+Projet Pong - Architecture ECS de base **COMPLÉTÉE** :
+- **Infrastructure** : Makefile, PCH, constants.h, git hooks, coverage 94.2%
+- **Entités** : Pool statique avec IDs uniques, gestion transparente
+- **Composants** : Position et Velocity avec Structure of Arrays (SoA) 
+- **Systèmes** : Movement system fonctionnel
+- **Tests TDD** : 8 tests atomiques, approche simple sans frameworks
+- **Build** : SDL2 uniquement, warnings stricts, sanitizers
 
 ## Configuration de développement
 
 Puisqu'il s'agit d'un projet C avec dépendance SDL2, le développement typique impliquera probablement :
 - Installation et liaison de la bibliothèque SDL2
 - Configuration du compilateur C (gcc/clang)
-- Configuration du système de construction (probablement Makefile ou CMake)
-- Intégration du framework de test pour l'approche TDD avec mocking
+- Configuration du système de construction Makefile
+- Tests TDD avec approche simple (assert/printf)
 
 ## Considérations d'architecture ECS
 
@@ -103,4 +107,4 @@ Le projet suit la méthodologie TDD, donc :
 - Écrire les tests avant d'implémenter les fonctionnalités
 - S'assurer que tous les tests passent avant de commiter
 - Maintenir une couverture de test complète pour tous les composants et systèmes
-- Utiliser des mocks pour isoler les unités sous test
+- Tests atomiques avec approche simple (assert/printf)

@@ -37,15 +37,11 @@ COVERAGE_DIR = coverage_report
 # Bibliothèques via pkg-config
 SDL2_CFLAGS = $(shell pkg-config --cflags sdl2)
 SDL2_LIBS = $(shell pkg-config --libs sdl2)
-GTEST_CFLAGS = $(shell pkg-config --cflags gtest)
-GTEST_LIBS = $(shell pkg-config --libs gtest)
-GMOCK_CFLAGS = $(shell pkg-config --cflags gmock)
-GMOCK_LIBS = $(shell pkg-config --libs gmock)
 
 # Flags complètes
 PROD_CFLAGS = $(CFLAGS) $(SDL2_CFLAGS) -I$(INCDIR)
-TEST_CFLAGS = $(CFLAGS) $(SDL2_CFLAGS) $(GTEST_CFLAGS) $(GMOCK_CFLAGS) -I$(INCDIR)
-LIBS = $(SDL2_LIBS) $(GTEST_LIBS) $(GMOCK_LIBS)
+TEST_CFLAGS = $(CFLAGS) $(SDL2_CFLAGS) -I$(INCDIR)
+LIBS = $(SDL2_LIBS)
 
 # Fichiers source
 PROD_SOURCES = $(wildcard $(SRCDIR)/*.c)
