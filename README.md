@@ -37,8 +37,9 @@ Le 20 Games Challenge est un défi d'apprentissage du développement de jeux vid
 
 #### Architecture ECS complète ✅
 - **Entités** : Pool statique avec IDs uniques, gestion transparente
-- **Composants** : Position, Velocity, Ball, Paddle avec Structure of Arrays (SoA)
-- **Systèmes** : Movement, Bounds, Collision, Input - tous fonctionnels
+- **Composants** : Position, Velocity, Ball, Paddle, Score, GameState avec Structure of Arrays (SoA)
+- **Systèmes** : Movement, Bounds, Collision, Input, Scoring, Reset - tous fonctionnels
+- **Entity Factory** : Helpers pour création d'entités complètes (create_player, create_pong_game)
 - **Tests TDD** : Couverture complète avec tests atomiques (un fichier = un test)
 
 #### Infrastructure de build ✅
@@ -49,19 +50,23 @@ Le 20 Games Challenge est un défi d'apprentissage du développement de jeux vid
 - **PCH** : Headers précompilés pour accélération du build
 
 #### Systèmes de jeu implémentés ✅
-- **Movement System** : Applique velocity à position
+- **Movement System** : Applique velocity à position avec delta_time
 - **Bounds System** : Maintient les paddles dans les limites d'écran
-- **Collision System** : Gère collisions balle-paddle et balle-murs
+- **Collision System** : Gère collisions balle-paddle et balle-murs avec rebonds
 - **Input System** : Contrôles des paddles avec actions métier (PLAYER1_PADDLE_UP, etc.)
+- **Scoring System** : Détection points par position des balles et identification joueurs
+- **Reset System** : Remise au centre de la balle après point marqué
 
 #### Prochaines étapes
-- [ ] Système Score et Game State
-- [ ] Reset de partie et gestion de points
+- [x] Système Score et Game State ✅
+- [x] Reset de partie et gestion de points ✅
+- [x] Entity Factory pour création simplifiée ✅
 - [ ] Intégration SDL2 complète (rendu, événements clavier)
-- [ ] Jeu principal complet
+- [ ] Boucle de jeu principale (main.c)
+- [ ] Jeu Pong complet et jouable
 
 ### Jeux à venir
-- [x] **01_pong** - Architecture ECS de base implementée
+- [x] **01_pong** - Architecture ECS complète avec systèmes Score ✅
 - [ ] **02_flappy_bird** - Planifié après extraction patterns
 - [ ] **03_breakout** - Planifié
 - [ ] *(autres jeux selon la progression)*
