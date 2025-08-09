@@ -40,7 +40,8 @@ Le 20 Games Challenge est un défi d'apprentissage du développement de jeux vid
 - **Composants** : Position, Velocity, Ball, Paddle, Score, GameState avec Structure of Arrays (SoA)
 - **Systèmes** : Movement, Bounds, Collision, Input, Scoring, Reset - tous fonctionnels
 - **Entity Factory** : Helpers pour création d'entités complètes (create_player, create_pong_game)
-- **Tests TDD** : Couverture complète avec tests atomiques (un fichier = un test)
+- **Game Config** : Système de configuration centralisé pour toutes les constantes du jeu ✅
+- **Tests TDD** : 18 tests atomiques passants, approche simple sans frameworks
 
 #### Infrastructure de build ✅
 - **Makefile** : Compilation avec warnings stricts, sanitizers, coverage
@@ -61,6 +62,8 @@ Le 20 Games Challenge est un défi d'apprentissage du développement de jeux vid
 - [x] Système Score et Game State ✅
 - [x] Reset de partie et gestion de points ✅
 - [x] Entity Factory pour création simplifiée ✅
+- [x] Système de configuration GameConfig ✅
+- [ ] Tests d'intégration (simulation de parties complètes)
 - [ ] Intégration SDL2 complète (rendu, événements clavier)
 - [ ] Boucle de jeu principale (main.c)
 - [ ] Jeu Pong complet et jouable

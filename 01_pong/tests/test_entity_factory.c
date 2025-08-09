@@ -4,8 +4,10 @@
 #include "ball.h"
 #include "entity.h"
 #include "entity_factory.h"
+#include "game_config.h"
 #include "game_state.h"
 #include "paddle.h"
+#include "pch.h"
 #include "position.h"
 #include "score.h"
 #include "velocity.h"
@@ -16,13 +18,15 @@ static void test_create_player()
     Entity *const player = create_player(100.0f, 250.0f);
     assert(player != NULL);
 
+    const GameConfig *const config = game_config_get_current();
+
     // Vérifier que tous les composants sont présents
     Position *const pos = position_get(player);
     Paddle *const paddle = paddle_get(player);
     Score *const score = score_get(player);
 
     assert(pos != NULL && FLOAT_EQ(pos->x, 100.0f) && FLOAT_EQ(pos->y, 250.0f));
-    assert(paddle != NULL && FLOAT_EQ(paddle->width, 10.0f) && FLOAT_EQ(paddle->height, 60.0f));
+    assert(paddle != NULL && FLOAT_EQ(paddle->width, config->paddle_width) && FLOAT_EQ(paddle->height, config->paddle_height));
     assert(score != NULL && score->points == 0);
 
     printf("✅ create_player() : OK\n");
@@ -37,6 +41,8 @@ static void test_create_ball()
     Entity *const ball_entity = create_ball(400.0f, 300.0f, 150.0f, -75.0f);
     assert(ball_entity != NULL);
 
+    const GameConfig *const config = game_config_get_current();
+
     // Vérifier que tous les composants sont présents
     Position *const pos = position_get(ball_entity);
     Velocity *const vel = velocity_get(ball_entity);
@@ -44,7 +50,7 @@ static void test_create_ball()
 
     assert(pos != NULL && FLOAT_EQ(pos->x, 400.0f) && FLOAT_EQ(pos->y, 300.0f));
     assert(vel != NULL && FLOAT_EQ(vel->dx, 150.0f) && FLOAT_EQ(vel->dy, -75.0f));
-    assert(ball != NULL && FLOAT_EQ(ball->radius, 4.0f));
+    assert(ball != NULL && FLOAT_EQ(ball->radius, config->ball_radius));
 
     printf("✅ create_ball() : OK\n");
 

@@ -4,11 +4,15 @@
 #include "reset_system.h"
 #include "ball.h"
 #include "entity.h"
+#include "game_config.h"
+#include "pch.h"
 #include "position.h"
 #include "velocity.h"
 
 void reset_system_update(void)
 {
+    const GameConfig *const config = game_config_get_current();
+
     // Parcourir toutes les entités pour trouver les balles
     for (uint32_t i = 1; i <= MAX_ENTITIES; ++i) {
         Entity *const entity = entity_get_by_id(i);
@@ -25,23 +29,23 @@ void reset_system_update(void)
         }
 
         // Vérifier si la balle a quitté l'écran
-        if (position->x < 0.0f || position->x > SCREEN_WIDTH) {
+        if (position->x < 0.0f || position->x > (float) config->screen_width) {
             // Déterminer la direction avant de modifier la position
             const bool ball_out_left = position->x < 0.0f;
 
             // Remettre la balle au centre
-            position->x = SCREEN_WIDTH / 2.0f;
-            position->y = SCREEN_HEIGHT / 2.0f;
+            position->x = (float) config->screen_width / 2.0f;
+            position->y = (float) config->screen_height / 2.0f;
 
             // Réinitialiser la vitesse avec direction appropriée
             if (ball_out_left) {
                 // Sortie par la gauche, renvoyer vers la droite
-                velocity->dx = 150.0f;
+                velocity->dx = config->ball_speed_x;
             } else {
                 // Sortie par la droite, renvoyer vers la gauche
-                velocity->dx = -150.0f;
+                velocity->dx = -config->ball_speed_x;
             }
-            velocity->dy = 100.0f; // Vitesse verticale standard
+            velocity->dy = config->ball_speed_y; // Vitesse verticale standard
         }
     }
 }

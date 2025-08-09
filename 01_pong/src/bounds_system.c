@@ -3,7 +3,9 @@
 
 #include "bounds_system.h"
 #include "entity.h"
+#include "game_config.h"
 #include "paddle.h"
+#include "pch.h"
 #include "position.h"
 
 void bounds_system_update()
@@ -21,10 +23,12 @@ void bounds_system_update()
         // Vérifier si l'entité est un paddle
         Paddle *const paddle = paddle_get(entity);
         if (paddle) {
+            const GameConfig *const config = game_config_get_current();
+
             // Contraindre le paddle dans les limites verticales
             // Le paddle ne peut pas dépasser le haut ou le bas de l'écran
             const float min_y = 0.0f;
-            const float max_y = SCREEN_HEIGHT - paddle->height;
+            const float max_y = (float) config->screen_height - paddle->height;
 
             if (pos->y < min_y)
                 pos->y = min_y;

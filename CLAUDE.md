@@ -82,14 +82,15 @@ Projet Pong - Architecture ECS et Systèmes de jeu **COMPLÉTÉS** :
 - **Infrastructure** : Makefile, PCH, constants.h, git hooks, coverage complète
 - **Entités** : Pool statique avec IDs uniques, gestion transparente
 - **Composants** : Position, Velocity, Ball, Paddle, Score, GameState avec Structure of Arrays (SoA)
-- **Systèmes** : Movement, Bounds, Collision, Input, Scoring, Reset - tous fonctionnels
+- **Systèmes** : Movement, Bounds, Collision, Input, Scoring, Reset - tous fonctionnels et utilisant GameConfig
 - **Entity Factory** : Helpers pour création d'entités (create_player, create_pong_game, destroy_pong_game)
-- **Tests TDD** : 17 tests atomiques, approche simple sans frameworks
+- **Game Config** : Système de configuration centralisé pour toutes les constantes du jeu
+- **Tests TDD** : 18 tests atomiques passants, approche simple sans frameworks
 - **Build** : SDL2 uniquement, warnings stricts, sanitizers
 - **Gameplay complet** : Scores, détection points, reset automatique, identification joueurs
 - **Boucle de jeu** : update_pong_game(delta_time) avec tous les systèmes intégrés
 
-**Prochaines étapes** : Intégration SDL2, rendu graphique, main.c avec boucle de jeu
+**Prochaines étapes** : Tests d'intégration ou intégration SDL2 directe
 
 ## Configuration de développement
 

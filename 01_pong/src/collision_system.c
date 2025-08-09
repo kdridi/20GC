@@ -4,7 +4,9 @@
 #include "collision_system.h"
 #include "ball.h"
 #include "entity.h"
+#include "game_config.h"
 #include "paddle.h"
+#include "pch.h"
 #include "position.h"
 #include "velocity.h"
 
@@ -28,13 +30,15 @@ void collision_system_update()
         if (!pos || !vel || !ball)
             continue;
 
+        const GameConfig *const config = game_config_get_current();
+
         // Collision avec les murs (limites horizontales)
         if (pos->x <= 0.0f && vel->dx < 0.0f) {
             vel->dx = -vel->dx; // Inverser la vitesse X
             pos->x = 0.0f;      // Corriger la position
-        } else if (pos->x >= SCREEN_WIDTH && vel->dx > 0.0f) {
+        } else if (pos->x >= (float) config->screen_width && vel->dx > 0.0f) {
             vel->dx = -vel->dx;
-            pos->x = SCREEN_WIDTH;
+            pos->x = (float) config->screen_width;
         }
 
         // Collision avec les paddles

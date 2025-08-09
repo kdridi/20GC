@@ -4,7 +4,9 @@
 #include "scoring_system.h"
 #include "ball.h"
 #include "entity.h"
+#include "game_config.h"
 #include "paddle.h"
+#include "pch.h"
 #include "position.h"
 #include "score.h"
 
@@ -29,8 +31,10 @@ void scoring_system_update(void)
             continue;
         }
 
+        const GameConfig *const config = game_config_get_current();
+
         // Identifier le joueur par la position du paddle
-        if (paddle_pos->x < SCREEN_WIDTH / 2.0f) {
+        if (paddle_pos->x < (float) config->screen_width / 2.0f) {
             player1_score = score; // Paddle à gauche = player1
         } else {
             player2_score = score; // Paddle à droite = player2
@@ -41,6 +45,8 @@ void scoring_system_update(void)
     if (player1_score == NULL || player2_score == NULL) {
         return;
     }
+
+    const GameConfig *const config = game_config_get_current();
 
     // Parcourir toutes les entités pour trouver les balles
     for (uint32_t i = 1; i <= MAX_ENTITIES; ++i) {
@@ -60,7 +66,7 @@ void scoring_system_update(void)
         if (position->x < 0.0f) {
             // Balle sortie par la gauche, player2 marque
             player2_score->points++;
-        } else if (position->x > SCREEN_WIDTH) {
+        } else if (position->x > (float) config->screen_width) {
             // Balle sortie par la droite, player1 marque
             player1_score->points++;
         }

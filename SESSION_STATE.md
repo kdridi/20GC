@@ -3,14 +3,15 @@
 ## Contexte actuel
 
 ### Projet : 20 Games Challenge - Pong (01_pong)
-**Date** : Session terminée après implémentation complète du système de scoring et entity factory
+**Date** : Session terminée après implémentation complète du système de configuration GameConfig
 
 ### Architecture ECS complète ✅
 - **Entités** : Pool statique avec gestion transparente
 - **Composants** : Position, Velocity, Ball, Paddle, Score, GameState (Structure of Arrays)
-- **Systèmes** : Movement, Bounds, Collision, Input, Scoring, Reset
-- **Entity Factory** : Helpers complets (create_player, create_pong_game, destroy_pong_game, update_pong_game)
-- **Tests TDD** : 17 tests atomiques passant tous ✅
+- **Systèmes** : Movement, Bounds, Collision, Input, Scoring, Reset - tous refactorisés avec GameConfig
+- **Entity Factory** : Helpers complets utilisant GameConfig
+- **Game Config** : Système de configuration centralisé implémenté ✅
+- **Tests TDD** : 18 tests atomiques passant tous ✅
 
 ### Infrastructure de build ✅
 - Makefile avec sanitizers, coverage, warnings stricts
@@ -28,49 +29,31 @@
 - ✅ Reset System (remise au centre après point)
 
 ### Documentation à jour ✅
-- README.md mis à jour avec progression complète
+- README.md mis à jour avec progression complète incluant GameConfig
 - CLAUDE.md synchronisé avec état actuel
-- Commit complet effectué (17 nouveaux fichiers)
+- SESSION_STATE.md reflète l'implémentation du système de configuration
 
 ## Plan d'action pour la prochaine session
 
-### Option 1 : Améliorations pré-SDL2 (Recommandée)
-**Objectif** : Enrichir l'architecture avant l'intégration graphique
+### Option 1 : Tests d'intégration (Recommandée)
+**Objectif** : Valider le gameplay complet avant SDL2
 
-#### 1. Système de configuration (Priorité haute)
-```c
-// include/config.h
-typedef struct {
-    float paddle_speed;
-    float ball_speed;
-    uint32_t max_score;
-    float paddle_width, paddle_height;
-    float ball_radius;
-} GameConfig;
-```
-- Centraliser toutes les constantes magiques
-- Faciliter l'ajustement des paramètres de gameplay
-- Tests TDD pour validation des configurations
+#### Tests à implémenter
+- Simulation de partie complète (premier à 11 points)
+- Validation du flow complet (collision → score → reset)
+- Tests de performance avec configurations variées
+- Détection de bugs d'intégration entre systèmes
 
-#### 2. IA basique Player 2 (Priorité moyenne)
-```c
-// include/ai_system.h
-void ai_system_update(float delta_time);
-```
+### Option 2 : IA basique Player 2
+**Objectif** : Mode 1 joueur avec adversaire automatique
+
+#### Implémentation IA
 - Système de suivi de balle pour Player 2
-- Difficulté ajustable (vitesse de réaction)
+- Difficulté ajustable via GameConfig
 - Mode 1 joueur vs IA ou 2 joueurs
+- Tests TDD pour comportement IA
 
-#### 3. Tests d'intégration (Priorité moyenne)
-```c
-// tests/test_full_game_simulation.c
-static void test_complete_game_flow()
-```
-- Simulation de parties complètes
-- Validation du flow de A à Z
-- Tests de stress sur performance
-
-### Option 2 : Intégration SDL2 directe
+### Option 3 : Intégration SDL2 directe
 **Objectif** : Rendre le jeu jouable visuellement
 
 #### Étapes SDL2
@@ -82,23 +65,22 @@ static void test_complete_game_flow()
 
 ### Recommandation stratégique
 
-**Je recommande l'Option 1** pour ces raisons :
-- L'architecture ECS est solide mais peut être enrichie
-- Le système de configuration facilitera grandement SDL2
-- L'IA rendra les tests plus intéressants
-- Les tests d'intégration garantiront la robustesse
+**Système de configuration COMPLÉTÉ ✅**
 
-**Séquence optimale** :
-1. **Configuration System** (1-2h) - Impact immédiat sur maintenabilité
-2. **AI System** (1-2h) - Rend le jeu plus engageant
-3. **Integration Tests** (1h) - Validation robustesse
-4. **SDL2 Integration** - Session suivante avec bases solides
+Le système GameConfig est maintenant pleinement implémenté :
+- Toutes les constantes magiques centralisées
+- Tous les systèmes refactorisés pour utiliser GameConfig
+- 18 tests passants incluant les tests de configuration
+- API flexible pour configurations personnalisées
+
+**Prochaine étape recommandée** : Tests d'intégration ou SDL2 directement selon priorité (gameplay solide vs visualisation rapide)
 
 ### État des fichiers critiques
-- `src/entity_factory.c` : Complet et fonctionnel
-- `include/entity_factory.h` : API stable et testée
-- `tests/test_entity_factory.c` : 6 tests passants
-- Tous les 17 tests passent sans erreur
+- `src/game_config.c` : Implémentation complète avec config par défaut
+- `include/game_config.h` : API complète (get_default, get_current, set_custom, reset)
+- `tests/test_game_config.c` : 3 tests passants (default, singleton, custom)
+- Tous les systèmes refactorisés pour utiliser GameConfig
+- Tous les 18 tests passent sans erreur
 
 ### Notes techniques importantes
 - Structure opaque respectée partout

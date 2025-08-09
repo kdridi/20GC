@@ -6,10 +6,12 @@
 #include "bounds_system.h"
 #include "collision_system.h"
 #include "entity.h"
+#include "game_config.h"
 #include "game_state.h"
 #include "input_system.h"
 #include "movement_system.h"
 #include "paddle.h"
+#include "pch.h"
 #include "position.h"
 #include "reset_system.h"
 #include "score.h"
@@ -21,10 +23,12 @@ Entity *create_player(const float x, const float y)
     Entity *const entity = entity_create();
     assert(entity != NULL && "Échec création entité player");
 
+    const GameConfig *const config = game_config_get_current();
+
     // Ajouter les composants du joueur
     position_add(entity, x, y);
-    paddle_add(entity, 10.0f, 60.0f); // Taille standard paddle
-    score_add(entity, 0);             // Score initial
+    paddle_add(entity, config->paddle_width, config->paddle_height);
+    score_add(entity, 0); // Score initial
 
     return entity;
 }
@@ -34,10 +38,12 @@ Entity *create_ball(const float x, const float y, const float dx, const float dy
     Entity *const entity = entity_create();
     assert(entity != NULL && "Échec création entité ball");
 
+    const GameConfig *const config = game_config_get_current();
+
     // Ajouter les composants de la balle
     position_add(entity, x, y);
     velocity_add(entity, dx, dy);
-    ball_add(entity, 4.0f); // Rayon standard
+    ball_add(entity, config->ball_radius);
 
     return entity;
 }
@@ -55,10 +61,17 @@ Entity *create_game_state(void)
 
 PongEntities create_pong_game(void)
 {
+    const GameConfig *const config = game_config_get_current();
+
     // Créer tous les éléments du jeu
-    Entity *const player1 = create_player(50.0f, SCREEN_HEIGHT / 2.0f);
-    Entity *const player2 = create_player(SCREEN_WIDTH - 60.0f, SCREEN_HEIGHT / 2.0f);
-    Entity *const ball = create_ball(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, 150.0f, 100.0f);
+    const float center_y = (float) config->screen_height / 2.0f;
+    Entity *const player1 = create_player(config->player1_x, center_y);
+    Entity *const player2 = create_player(config->player2_x, center_y);
+    Entity *const ball = create_ball(
+        (float) config->screen_width / 2.0f,
+        center_y,
+        config->ball_speed_x,
+        config->ball_speed_y);
     Entity *const game_state = create_game_state();
 
     return (PongEntities) {
