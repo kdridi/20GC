@@ -78,19 +78,26 @@ Ce fichier fournit des conseils à Claude Code (claude.ai/code) lors du travail 
 
 ## État actuel
 
-Projet Pong - Architecture ECS et Systèmes de jeu **COMPLÉTÉS** :
-- **Infrastructure** : Makefile, PCH, constants.h, git hooks, coverage complète
-- **Entités** : Pool statique avec IDs uniques, gestion transparente
+Projet Pong - **COMPLÉTÉ avec validation architecture** ✅ :
+- **Infrastructure** : Makefile modulaire multi-backends, PCH, constants.h, git hooks, coverage ~95%
+- **Architecture ECS** : Entièrement découplée, prouvée avec 4 backends graphiques différents
+- **Entités** : Pool statique avec IDs uniques, zero allocation
 - **Composants** : Position, Velocity, Ball, Paddle, Score, GameState avec Structure of Arrays (SoA)
-- **Systèmes** : Movement, Bounds, Collision, Input, Scoring, Reset - tous fonctionnels et utilisant GameConfig
-- **Entity Factory** : Helpers pour création d'entités (create_player, create_pong_game, destroy_pong_game)
+- **Systèmes** : Movement, Bounds, Collision, Input, Scoring, Reset - tous fonctionnels et testés
+- **Entity Factory** : API simplifiée (create_pong_game, update_pong_game, destroy_pong_game)
 - **Game Config** : Système de configuration centralisé pour toutes les constantes du jeu
-- **Tests TDD** : 18 tests atomiques passants, approche simple sans frameworks
-- **Build** : SDL2 uniquement, warnings stricts, sanitizers
-- **Gameplay complet** : Scores, détection points, reset automatique, identification joueurs
-- **Boucle de jeu** : update_pong_game(delta_time) avec tous les systèmes intégrés
+- **Tests TDD** : 19 tests atomiques (100% passing), approche simple avec assert()
+- **4 Backends fonctionnels** :
+  - SDL2 : Rendu classique avec surfaces/textures
+  - ncurses : Terminal ASCII art  
+  - Raylib : API moderne hardware-accélérée
+  - OpenGL : Low-level avec shaders custom
+- **Gameplay complet** : Scores, collisions, reset automatique, contrôles 2 joueurs
+- **Gestion écran Retina** : Support correct des écrans haute densité (macOS)
 
-**Prochaines étapes** : Tests d'intégration ou intégration SDL2 directe
+**Architecture validée** : La même logique ECS `update_pong_game()` fonctionne avec 4 renderers totalement différents, prouvant le découplage complet entre logique et présentation.
+
+**Prochaines étapes** : Extraction des composants réutilisables pour les prochains jeux du 20GC
 
 ## Configuration de développement
 

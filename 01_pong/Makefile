@@ -110,15 +110,15 @@ $(PCH_OUT): $(PCH_FILE)
 	$(CC) $(PROD_CFLAGS) -c $< -o $@
 
 # Exécutable SDL2
-$(TARGET_SDL2): $(filter-out $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_raylib.o $(BUILDDIR)/prod/main_opengl.o, $(PROD_OBJECTS))
+$(TARGET_SDL2): $(filter-out $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_raylib.o $(BUILDDIR)/prod/main_opengl.o $(BUILDDIR)/prod/main_opengl_simple.o, $(PROD_OBJECTS))
 	$(CC) $^ $(SDL2_LIBS) $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
 
 # Exécutable ncurses  
-$(TARGET_NCURSES): $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_raylib.o $(BUILDDIR)/prod/main_opengl.o, $(PROD_OBJECTS))
+$(TARGET_NCURSES): $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_raylib.o $(BUILDDIR)/prod/main_opengl.o $(BUILDDIR)/prod/main_opengl_simple.o, $(PROD_OBJECTS))
 	$(CC) $^ -lncurses $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
 
 # Exécutable Raylib
-$(TARGET_RAYLIB): $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_opengl.o, $(PROD_OBJECTS))
+$(TARGET_RAYLIB): $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_opengl.o $(BUILDDIR)/prod/main_opengl_simple.o, $(PROD_OBJECTS))
 	$(CC) $^ $(RAYLIB_LIBS) $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
 
 # Exécutable OpenGL

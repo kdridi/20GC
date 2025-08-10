@@ -171,6 +171,12 @@ static void setup_circle_geometry(PongAppOpenGL *app)
     free(vertices);
 }
 
+static void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+{
+    (void) window; // Unused
+    glViewport(0, 0, width, height);
+}
+
 static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     (void) scancode; // Unused
@@ -244,6 +250,7 @@ static bool init_opengl(PongAppOpenGL *app)
     glfwMakeContextCurrent(app->window);
     glfwSetWindowUserPointer(app->window, app);
     glfwSetKeyCallback(app->window, key_callback);
+    glfwSetFramebufferSizeCallback(app->window, framebuffer_size_callback);
 
     // Initialiser GLEW
     if (glewInit() != GLEW_OK) {
@@ -253,8 +260,15 @@ static bool init_opengl(PongAppOpenGL *app)
 
     printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
 
-    // Configuration OpenGL
-    glViewport(0, 0, (int) config->screen_width, (int) config->screen_height);
+    // IMPORTANT: Sur macOS Retina, le framebuffer est plus grand que la fenêtre
+    int framebuffer_width, framebuffer_height;
+    glfwGetFramebufferSize(app->window, &framebuffer_width, &framebuffer_height);
+    printf("Debug: Window size: %dx%d, Framebuffer: %dx%d\n",
+           (int) config->screen_width, (int) config->screen_height,
+           framebuffer_width, framebuffer_height);
+
+    // Configuration OpenGL - utiliser les dimensions réelles du framebuffer
+    glViewport(0, 0, framebuffer_width, framebuffer_height);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Fond noir
 
     // Créer le programme shader
@@ -268,17 +282,8 @@ static bool init_opengl(PongAppOpenGL *app)
     app->color_loc = glGetUniformLocation(app->shader_program, "color");
 
     // Créer la matrice de projection (coordonnées ECS: (0,0) = coin haut-gauche)
-    printf("Debug: screen dimensions %ux%u\n", config->screen_width, config->screen_height);
     create_ortho_matrix(app->projection_matrix, 0.0f, (float) config->screen_width,
                         0.0f, (float) config->screen_height);
-
-    // Debug: afficher la matrice
-    printf("Debug: projection matrix:\n");
-    for (int i = 0; i < 4; i++) {
-        printf("[%f %f %f %f]\n",
-               (double) app->projection_matrix[i * 4], (double) app->projection_matrix[i * 4 + 1],
-               (double) app->projection_matrix[i * 4 + 2], (double) app->projection_matrix[i * 4 + 3]);
-    }
 
     // Setup géométrie
     setup_rectangle_geometry(app);
@@ -319,14 +324,6 @@ static void render_rectangle_opengl(PongAppOpenGL *app, float x, float y, float 
     vertices[5] = ndc_y + ndc_h / 2; // y3
     vertices[6] = ndc_x - ndc_w / 2; // x4
     vertices[7] = ndc_y + ndc_h / 2; // y4
-
-    // Debug pour le premier appel
-    static bool first_call = true;
-    if (first_call) {
-        printf("Debug: ECS (%.1f,%.1f) -> NDC (%.3f,%.3f) size (%.3f,%.3f)\n",
-               (double) x, (double) y, (double) ndc_x, (double) ndc_y, (double) ndc_w, (double) ndc_h);
-        first_call = false;
-    }
 
     // Mettre à jour les données du buffer
     glBindVertexArray(app->rectangle_VAO);
@@ -388,13 +385,6 @@ static void render_circle_opengl(PongAppOpenGL *app, float x, float y, float rad
 static void render_field_opengl(PongAppOpenGL *app)
 {
     const GameConfig *config = game_config_get_current();
-
-    // Test simple : un gros rectangle au centre pour vérifier le rendu de base
-    float test_x = (float) config->screen_width / 2.0f;  // 400
-    float test_y = (float) config->screen_height / 2.0f; // 300
-    printf("Debug: rendering test rectangle at (%.1f, %.1f) size 100x100\n",
-           (double) test_x, (double) test_y);
-    render_rectangle_opengl(app, test_x, test_y, 100.0f, 100.0f, 1.0f, 0.0f, 0.0f); // Rouge
 
     // Ligne centrale en pointillés
     float center_x = (float) config->screen_width / 2.0f;
