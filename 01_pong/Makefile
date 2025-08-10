@@ -39,6 +39,8 @@ SDL2_CFLAGS = $(shell pkg-config --cflags sdl2)
 SDL2_LIBS = $(shell pkg-config --libs sdl2)
 RAYLIB_CFLAGS = $(shell pkg-config --cflags raylib)
 RAYLIB_LIBS = $(shell pkg-config --libs raylib)
+GLFW3_CFLAGS = $(shell pkg-config --cflags glfw3)
+GLFW3_LIBS = $(shell pkg-config --libs glfw3 glew) -framework OpenGL
 
 # Flags complètes
 PROD_CFLAGS = $(CFLAGS) $(SDL2_CFLAGS) -I$(INCDIR)
@@ -50,7 +52,7 @@ PROD_SOURCES = $(wildcard $(SRCDIR)/*.c)
 TEST_SOURCES = $(wildcard $(TESTDIR)/*.c)
 PROD_OBJECTS = $(PROD_SOURCES:$(SRCDIR)/%.c=$(BUILDDIR)/prod/%.o)
 # Objets pour les tests : exclure tous les main*.o qui contiennent main()
-TEST_LIB_OBJECTS = $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_raylib.o, $(PROD_OBJECTS))
+TEST_LIB_OBJECTS = $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_raylib.o $(BUILDDIR)/prod/main_opengl.o $(BUILDDIR)/prod/main_opengl_simple.o, $(PROD_OBJECTS))
 TEST_OBJECTS = $(TEST_SOURCES:$(TESTDIR)/%.c=$(BUILDDIR)/test/%.o)
 TEST_TARGETS = $(TEST_SOURCES:$(TESTDIR)/%.c=$(BUILDDIR)/%)
 
@@ -58,9 +60,10 @@ TEST_TARGETS = $(TEST_SOURCES:$(TESTDIR)/%.c=$(BUILDDIR)/%)
 TARGET_SDL2 = pong_sdl2
 TARGET_NCURSES = pong_ncurses
 TARGET_RAYLIB = pong_raylib
+TARGET_OPENGL = pong_opengl
 
 # Backends disponibles
-BACKENDS = sdl2 ncurses raylib
+BACKENDS = sdl2 ncurses raylib opengl
 
 .PHONY: all clean test format dirs pch debug release coverage deps help $(BACKENDS)
 
@@ -71,6 +74,7 @@ all: $(BACKENDS)
 sdl2: dirs pch $(TARGET_SDL2)
 ncurses: dirs pch $(TARGET_NCURSES)
 raylib: dirs pch $(TARGET_RAYLIB)
+opengl: dirs pch $(TARGET_OPENGL)
 
 debug: all
 
@@ -106,16 +110,24 @@ $(PCH_OUT): $(PCH_FILE)
 	$(CC) $(PROD_CFLAGS) -c $< -o $@
 
 # Exécutable SDL2
-$(TARGET_SDL2): $(filter-out $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_raylib.o, $(PROD_OBJECTS))
+$(TARGET_SDL2): $(filter-out $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_raylib.o $(BUILDDIR)/prod/main_opengl.o, $(PROD_OBJECTS))
 	$(CC) $^ $(SDL2_LIBS) $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
 
 # Exécutable ncurses  
-$(TARGET_NCURSES): $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_raylib.o, $(PROD_OBJECTS))
+$(TARGET_NCURSES): $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_raylib.o $(BUILDDIR)/prod/main_opengl.o, $(PROD_OBJECTS))
 	$(CC) $^ -lncurses $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
 
 # Exécutable Raylib
-$(TARGET_RAYLIB): $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_ncurses.o, $(PROD_OBJECTS))
+$(TARGET_RAYLIB): $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_opengl.o, $(PROD_OBJECTS))
 	$(CC) $^ $(RAYLIB_LIBS) $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
+
+# Exécutable OpenGL
+$(TARGET_OPENGL): $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_raylib.o $(BUILDDIR)/prod/main_opengl_simple.o, $(PROD_OBJECTS))
+	$(CC) $^ $(GLFW3_LIBS) $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
+
+# Exécutable OpenGL Simple
+pong_opengl_simple: $(filter-out $(BUILDDIR)/prod/main.o $(BUILDDIR)/prod/main_ncurses.o $(BUILDDIR)/prod/main_raylib.o $(BUILDDIR)/prod/main_opengl.o, $(PROD_OBJECTS))
+	$(CC) $^ $(GLFW3_LIBS) $(if $(findstring fsanitize,$(CFLAGS)),$(SANITIZERS)) $(if $(findstring coverage,$(CFLAGS)),$(COVERAGE_FLAGS)) -o $@
 
 # Lien de compatibilité (optionnel)
 pong: $(TARGET_SDL2)
@@ -139,7 +151,7 @@ format:
 
 # Nettoyage
 clean:
-	rm -rf $(BUILDDIR) pong $(TARGET_SDL2) $(TARGET_NCURSES) $(TARGET_RAYLIB) $(PCH_OUT) $(COVERAGE_DIR) coverage.info *.gcda *.gcno
+	rm -rf $(BUILDDIR) pong $(TARGET_SDL2) $(TARGET_NCURSES) $(TARGET_RAYLIB) $(TARGET_OPENGL) $(PCH_OUT) $(COVERAGE_DIR) coverage.info *.gcda *.gcno
 
 # Aide
 help:
@@ -153,6 +165,7 @@ help:
 	@echo "  sdl2      - Version SDL2 (graphique, fenêtrée)"
 	@echo "  ncurses   - Version ncurses (terminal, ASCII)"
 	@echo "  raylib    - Version Raylib (moderne, hardware accelerated)"
+	@echo "  opengl    - Version OpenGL avec shaders (🔥 hardcore, low-level)"
 	@echo ""
 	@echo "🔧 Utilitaires :"
 	@echo "  format    - Formate le code avec clang-format"
@@ -164,6 +177,7 @@ help:
 	@echo "  ./pong_sdl2    - Version SDL2"
 	@echo "  ./pong_ncurses - Version ncurses"
 	@echo "  ./pong_raylib  - Version Raylib"
+	@echo "  ./pong_opengl  - Version OpenGL + Shaders"
 	@echo "  ./pong         - Lien symbolique vers pong_sdl2"
 	@echo ""
 	@echo "⚙️ Variables de build :"
