@@ -102,6 +102,48 @@ Exécuter directement le template compilé :
 
 Le preset Xcode est disponible uniquement sur macOS.
 
+## Signature locale des exécutables macOS
+
+La signature avec une identité Apple Development stable évite que macOS considère chaque nouveau build comme une nouvelle application lorsqu'il est exécuté depuis un volume amovible.
+
+Afficher les identités disponibles :
+
+```sh
+security find-identity -v -p codesigning
+```
+
+Configurer un build Ninja signé :
+
+```sh
+cmake --preset ninja-debug \
+  -DTGC_CODESIGN_IDENTITY="Apple Development: name@example.com (TEAM_ID)"
+cmake --build --preset ninja-debug
+```
+
+Configurer le projet Xcode signé :
+
+```sh
+cmake --preset xcode \
+  -DTGC_CODESIGN_IDENTITY="Apple Development: name@example.com (TEAM_ID)"
+cmake --build --preset xcode-debug
+```
+
+L'identité est conservée dans le cache du répertoire de build. Il faut la fournir à nouveau après une configuration avec `--fresh` ou après avoir supprimé ce répertoire.
+
+Vérifier la signature :
+
+```sh
+codesign --verify --strict --verbose=2 \
+  build/ninja-debug/templates/simple_fmt/simple_fmt
+
+codesign -dvv --requirements - \
+  build/ninja-debug/templates/simple_fmt/simple_fmt
+```
+
+L'identité personnelle ne doit pas être ajoutée à `CMakePresets.json`. Elle peut être conservée dans un `CMakeUserPresets.json`, ignoré par Git.
+
+Après configuration depuis le terminal, VS Code réutilise l'identité enregistrée dans le cache CMake correspondant.
+
 ## Utilisation avec VS Code
 
 Ouvrir le dépôt :

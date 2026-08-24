@@ -1,5 +1,12 @@
 include_guard(GLOBAL)
 
+set(TGC_CODESIGN_IDENTITY "" CACHE STRING
+  "Apple code-signing identity used for local macOS executables"
+)
+set(TGC_CODESIGN_IDENTIFIER_PREFIX "com.kdridi.20gc" CACHE STRING
+  "Code-signing identifier prefix used for local macOS executables"
+)
+
 function(tgc_add_template)
   if(ARGC GREATER 0)
     message(FATAL_ERROR "tgc_add_template() does not accept arguments")
@@ -62,6 +69,40 @@ function(tgc_add_template)
     "TEMPLATE_NAME=\"${target_name}\""
     "TGC_PLATFORM_NAME=\"${CMAKE_SYSTEM_NAME}\""
   )
+
+  if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND TGC_CODESIGN_IDENTITY)
+    string(REGEX REPLACE "[^A-Za-z0-9.-]" "-"
+      code_signing_target_name "${target_name}"
+    )
+    set(code_signing_identifier
+      "${TGC_CODESIGN_IDENTIFIER_PREFIX}.${code_signing_target_name}"
+    )
+
+    if(CMAKE_GENERATOR STREQUAL "Xcode")
+      set_target_properties("${target_name}" PROPERTIES
+        XCODE_ATTRIBUTE_CODE_SIGN_STYLE "Manual"
+        XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "${TGC_CODESIGN_IDENTITY}"
+        XCODE_ATTRIBUTE_OTHER_CODE_SIGN_FLAGS
+          "--identifier ${code_signing_identifier}"
+      )
+    else()
+      find_program(codesign_executable
+        NAMES codesign
+        PATHS /usr/bin
+        REQUIRED
+        NO_CACHE
+      )
+      add_custom_command(TARGET "${target_name}" POST_BUILD
+        COMMAND "${codesign_executable}"
+          --force
+          --sign "${TGC_CODESIGN_IDENTITY}"
+          --identifier "${code_signing_identifier}"
+          "$<TARGET_FILE:${target_name}>"
+        VERBATIM
+        COMMENT "Signing ${target_name} as ${code_signing_identifier}"
+      )
+    endif()
+  endif()
 
   set(platform_configuration "${platform_directory}/platform.cmake")
   if(EXISTS "${platform_configuration}")
