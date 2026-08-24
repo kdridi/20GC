@@ -179,10 +179,10 @@ Ouvrir la palette de commandes avec `Cmd+Shift+P` sur macOS ou `Ctrl+Shift+P` su
 3. utiliser **CMake: Run Without Debugging** pour l'exécuter
 4. ou utiliser **CMake: Debug** pour démarrer le débogueur
 
-Si IntelliSense ne se met pas à jour après un changement de preset :
+Si l'autocomplétion clangd ne se met pas à jour :
 
-1. **CMake: Configure**
-2. **C/C++: Reset IntelliSense Database**
+1. **CMake: Configure** avec le preset **Ninja Debug**
+2. **clangd: Restart language server**
 3. si nécessaire, **Developer: Reload Window**
 
 ## Organisation des templates
