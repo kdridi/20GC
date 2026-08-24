@@ -50,6 +50,9 @@ function(tgc_add_template)
   endif()
 
   add_executable("${target_name}")
+  set(TGC_TEMPLATE_TARGET "${target_name}")
+  set(TGC_TEMPLATE_TARGET "${target_name}" PARENT_SCOPE)
+
   target_sources("${target_name}" PRIVATE ${common_sources} ${platform_sources})
 
   target_include_directories("${target_name}" PRIVATE
@@ -106,7 +109,6 @@ function(tgc_add_template)
 
   set(platform_configuration "${platform_directory}/platform.cmake")
   if(EXISTS "${platform_configuration}")
-    set(TGC_TEMPLATE_TARGET "${target_name}")
     include("${platform_configuration}")
   endif()
 endfunction()
