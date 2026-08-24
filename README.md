@@ -1,1 +1,157 @@
 # 20GC
+
+Collection de templates C++23 construits avec CMake et vcpkg.
+
+## Prérequis
+
+- CMake 4.4 ou supérieur
+- un compilateur compatible C++23
+- Git
+- Ninja pour les presets Ninja
+- Xcode pour le preset Xcode sur macOS
+
+Pour VS Code, installer les extensions suivantes :
+
+- **CMake Tools** (`ms-vscode.cmake-tools`)
+- **C/C++** (`ms-vscode.cpptools`)
+
+## Initialisation
+
+Cloner le dépôt avec ses sous-modules :
+
+```sh
+git clone --recurse-submodules git@github.com:kdridi/20GC.git
+cd 20GC
+```
+
+Pour initialiser les sous-modules dans un dépôt déjà cloné :
+
+```sh
+git submodule update --init --recursive
+```
+
+Initialiser vcpkg sur macOS ou Linux :
+
+```sh
+./extern/vcpkg/bootstrap-vcpkg.sh
+```
+
+Sur Windows :
+
+```powershell
+.\extern\vcpkg\bootstrap-vcpkg.bat
+```
+
+## Ligne de commande avec Ninja
+
+Afficher tous les presets disponibles :
+
+```sh
+cmake --list-presets=all
+```
+
+### Debug
+
+```sh
+cmake --preset ninja-debug
+cmake --build --preset ninja-debug
+./build/ninja-debug/templates/simple_fmt/simple_fmt
+```
+
+### Release
+
+```sh
+cmake --preset ninja-release
+cmake --build --preset ninja-release
+./build/ninja-release/templates/simple_fmt/simple_fmt
+```
+
+Pour supprimer le cache CMake et forcer une configuration propre :
+
+```sh
+cmake --preset ninja-debug --fresh
+```
+
+## Ligne de commande avec Xcode
+
+Générer le projet Xcode :
+
+```sh
+cmake --preset xcode
+```
+
+Compiler en Debug ou Release :
+
+```sh
+cmake --build --preset xcode-debug
+cmake --build --preset xcode-release
+```
+
+Ouvrir le projet généré dans Xcode :
+
+```sh
+open build/xcode/tgc.xcodeproj
+```
+
+Exécuter directement le template compilé :
+
+```sh
+./build/xcode/templates/simple_fmt/Debug/simple_fmt
+./build/xcode/templates/simple_fmt/Release/simple_fmt
+```
+
+Le preset Xcode est disponible uniquement sur macOS.
+
+## Utilisation avec VS Code
+
+Ouvrir le dépôt :
+
+```sh
+code .
+```
+
+Ouvrir la palette de commandes avec `Cmd+Shift+P` sur macOS ou `Ctrl+Shift+P` sur Windows/Linux, puis utiliser les commandes suivantes.
+
+### Configurer avec Ninja
+
+1. **CMake: Select Configure Preset**
+2. sélectionner **Ninja Debug** ou **Ninja Release**
+3. **CMake: Configure**
+4. **CMake: Select Build Preset**
+5. sélectionner le preset Ninja correspondant
+6. **CMake: Build**
+
+### Configurer avec Xcode
+
+1. **CMake: Select Configure Preset**
+2. sélectionner **Xcode**
+3. **CMake: Configure**
+4. **CMake: Select Build Preset**
+5. sélectionner **xcode-debug** ou **xcode-release**
+6. **CMake: Build**
+
+### Exécuter ou déboguer un template
+
+1. **CMake: Set Launch/Debug Target**
+2. sélectionner **simple_fmt**
+3. utiliser **CMake: Run Without Debugging** pour l'exécuter
+4. ou utiliser **CMake: Debug** pour démarrer le débogueur
+
+Si IntelliSense ne se met pas à jour après un changement de preset :
+
+1. **CMake: Configure**
+2. **C/C++: Reset IntelliSense Database**
+3. si nécessaire, **Developer: Reload Window**
+
+## Organisation des templates
+
+Chaque répertoire `templates/<nom>` produit automatiquement une cible portant le même nom.
+
+Les sources C++ sont découvertes récursivement dans :
+
+```text
+templates/<nom>/src
+templates/<nom>/platform/<CMAKE_SYSTEM_NAME>
+```
+
+Seules les sources correspondant à la plateforme cible sont compilées. Par exemple, sur macOS, CMake utilise `platform/Darwin`.
