@@ -74,11 +74,14 @@ cmake --preset ninja-debug --fresh
 
 ## Ligne de commande avec Xcode
 
-Générer le projet Xcode :
+Générer le projet Xcode en utilisant le chemin physique du dépôt :
 
 ```sh
+cd "$(pwd -P)"
 cmake --preset xcode
 ```
+
+L'utilisation du chemin physique est importante lorsque le dépôt est atteint par un lien symbolique : Xcode exige que les chemins du projet et des sources soient identiques pour indexer correctement le code.
 
 Compiler en Debug ou Release :
 
@@ -90,7 +93,7 @@ cmake --build --preset xcode-release
 Ouvrir le projet généré dans Xcode :
 
 ```sh
-open build/xcode/tgc.xcodeproj
+open "$(pwd -P)/build/xcode/tgc.xcodeproj"
 ```
 
 Exécuter directement le template compilé :
