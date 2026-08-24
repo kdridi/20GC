@@ -26,3 +26,18 @@ foreach(template_directory IN LISTS TEMPLATE_DIRECTORIES)
     add_subdirectory("${template_directory}")
   endif()
 endforeach()
+
+include("${CMAKE_CURRENT_SOURCE_DIR}/games/commons.cmake")
+
+file(
+  GLOB GAME_DIRECTORIES
+  CONFIGURE_DEPENDS
+  LIST_DIRECTORIES true
+  "${CMAKE_CURRENT_SOURCE_DIR}/games/*"
+)
+
+foreach(template_directory IN LISTS GAME_DIRECTORIES)
+  if(EXISTS "${template_directory}/CMakeLists.txt")
+    add_subdirectory("${template_directory}")
+  endif()
+endforeach()
