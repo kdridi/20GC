@@ -1,4 +1,4 @@
-#include <core/game.hpp>
+#include <core/Game.hpp>
 
 #include <fmt/core.h>
 
@@ -14,7 +14,9 @@ int main()
 
     fmt::print("Hello from \"{}\"!\n", TEMPLATE_NAME);
     try {
-        core::game game{};
+        core::Game game{};
+        if (!game.init())
+            return EXIT_FAILURE;
         return game.run();
     } catch (const std::exception &e) {
         std::cin.get();
