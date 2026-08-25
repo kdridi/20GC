@@ -65,14 +65,18 @@ namespace {
         return static_cast<AppState *>(appstate);
     }
 
-    // Interroge directement le scale propre à la fenêtre. Cette API combine la
-    // densité en pixels de la fenêtre et le content scale de son écran ; elle est
-    // donc préférable à SDL_GetDisplayContentScale() après la création d'une fenêtre.
-    // Une valeur de repli à 1 évite de rendre l'interface invisible en cas d'erreur.
+    // Le display scale SDL inclut la densité du framebuffer. Celle-ci est déjà
+    // appliquée au renderer plus bas via io.DisplayFramebufferScale : l'utiliser
+    // aussi pour le style agrandirait deux fois ImGui (notamment sur un écran Retina).
+    // Le style ne doit donc recevoir que le facteur restant en coordonnées logiques.
     float get_display_scale(SDL_Window *window)
     {
-        const float scale{SDL_GetWindowDisplayScale(window)};
-        return scale > 0.0f ? scale : 1.0f;
+        const float display_scale{SDL_GetWindowDisplayScale(window)};
+        const float pixel_density{SDL_GetWindowPixelDensity(window)};
+        if (display_scale <= 0.0f || pixel_density <= 0.0f) {
+            return 1.0f;
+        }
+        return display_scale / pixel_density;
     }
 
     // Réapplique toujours le scale depuis le style de référence. Sans cette
