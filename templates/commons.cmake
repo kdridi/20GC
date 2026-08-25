@@ -8,11 +8,25 @@ set(TGC_CODESIGN_IDENTIFIER_PREFIX "com.kdridi.20gc" CACHE STRING
 )
 
 function(tgc_add_template)
-  if(ARGC GREATER 0)
-    message(FATAL_ERROR "tgc_add_template() does not accept arguments")
+  set(options NO_AUTO_SOURCES)
+  set(one_value_arguments TARGET)
+  cmake_parse_arguments(PARSE_ARGV 0 TGC_TEMPLATE
+    "${options}"
+    "${one_value_arguments}"
+    ""
+  )
+
+  if(TGC_TEMPLATE_UNPARSED_ARGUMENTS)
+    message(FATAL_ERROR
+      "tgc_add_template() received unknown arguments: ${TGC_TEMPLATE_UNPARSED_ARGUMENTS}"
+    )
   endif()
 
-  get_filename_component(target_name "${CMAKE_CURRENT_SOURCE_DIR}" NAME)
+  if(TGC_TEMPLATE_TARGET)
+    set(target_name "${TGC_TEMPLATE_TARGET}")
+  else()
+    get_filename_component(target_name "${CMAKE_CURRENT_SOURCE_DIR}" NAME)
+  endif()
 
   if(TARGET "${target_name}")
     message(FATAL_ERROR "A target named '${target_name}' already exists")
@@ -21,39 +35,45 @@ function(tgc_add_template)
   set(platform_directory
     "${CMAKE_CURRENT_SOURCE_DIR}/platform/${CMAKE_SYSTEM_NAME}"
   )
+  set(common_sources)
+  set(platform_sources)
 
-  file(
-    GLOB_RECURSE common_sources
-    CONFIGURE_DEPENDS
-    LIST_DIRECTORIES false
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx"
-  )
-
-  file(
-    GLOB_RECURSE platform_sources
-    CONFIGURE_DEPENDS
-    LIST_DIRECTORIES false
-    "${platform_directory}/*.cpp"
-    "${platform_directory}/*.cc"
-    "${platform_directory}/*.cxx"
-  )
-
-  list(SORT common_sources)
-  list(SORT platform_sources)
-
-  if(NOT common_sources AND NOT platform_sources)
-    message(FATAL_ERROR
-      "Template '${target_name}' has no C++ source for platform '${CMAKE_SYSTEM_NAME}'"
+  if(NOT TGC_TEMPLATE_NO_AUTO_SOURCES)
+    file(
+      GLOB_RECURSE common_sources
+      CONFIGURE_DEPENDS
+      LIST_DIRECTORIES false
+      "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+      "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc"
+      "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx"
     )
+
+    file(
+      GLOB_RECURSE platform_sources
+      CONFIGURE_DEPENDS
+      LIST_DIRECTORIES false
+      "${platform_directory}/*.cpp"
+      "${platform_directory}/*.cc"
+      "${platform_directory}/*.cxx"
+    )
+
+    list(SORT common_sources)
+    list(SORT platform_sources)
+
+    if(NOT common_sources AND NOT platform_sources)
+      message(FATAL_ERROR
+        "Template '${target_name}' has no C++ source for platform '${CMAKE_SYSTEM_NAME}'"
+      )
+    endif()
   endif()
 
   add_executable("${target_name}")
   set(TGC_TEMPLATE_TARGET "${target_name}")
   set(TGC_TEMPLATE_TARGET "${target_name}" PARENT_SCOPE)
 
-  target_sources("${target_name}" PRIVATE ${common_sources} ${platform_sources})
+  if(common_sources OR platform_sources)
+    target_sources("${target_name}" PRIVATE ${common_sources} ${platform_sources})
+  endif()
 
   target_include_directories("${target_name}" PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"

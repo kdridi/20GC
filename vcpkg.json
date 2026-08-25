@@ -2,6 +2,7 @@
   "dependencies": [
     "entt",
     "fmt",
+    "glm",
     "sdl3",
     {
       "name": "imgui",
