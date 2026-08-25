@@ -1,6 +1,13 @@
 {
   "dependencies": [
     "fmt",
-    "sdl3"
+    "sdl3",
+    {
+      "name": "imgui",
+      "features": [
+        "sdl3-binding",
+        "sdl3-renderer-binding"
+      ]
+    }
   ]
 }
