@@ -23,6 +23,11 @@ namespace SDL3 {
     using Window = SDL_Window;
     using WindowFlags = SDL_WindowFlags;
 
+    struct RenderSize {
+        float width{};
+        float height{};
+    };
+
     inline constexpr AppResult Continue{SDL_APP_CONTINUE};
     inline constexpr AppResult Success{SDL_APP_SUCCESS};
     inline constexpr AppResult Failure{SDL_APP_FAILURE};
@@ -111,6 +116,20 @@ namespace SDL3 {
         }
 
         return scale;
+    }
+
+    inline bool GetRenderSize(Window *window, RenderSize &size)
+    {
+        int width{};
+        int height{};
+        if (!SDL_GetWindowSize(window, &width, &height)) {
+            LogError("Impossible d'obtenir la taille de rendu");
+            return false;
+        }
+
+        size.width = static_cast<float>(width);
+        size.height = static_cast<float>(height);
+        return true;
     }
 
     inline bool CenterWindow(Window *window)
