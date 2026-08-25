@@ -68,3 +68,6 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
+
+# Other files
+*.DS_Store
