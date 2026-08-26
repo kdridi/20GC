@@ -30,14 +30,24 @@ contiennent les déclarations et les `.cpp` les implémentations non inline.
 
 ## Shaders
 
-Les shaders HLSL sources sont dans `src/tgc/gpu/shaders`. Les variantes SPIR-V, DXIL
-et MSL sont précompilées et embarquées dans l'exécutable afin de ne pas
-compiler des shaders à l'exécution. Pour les régénérer, installer la CLI
-[SDL_shadercross](https://github.com/libsdl-org/SDL_shadercross), puis lancer :
+Les shaders HLSL sources sont dans `src/tgc/gpu/shaders`. Les variantes
+SPIR-V, DXIL et MSL sont générées à l'avance et embarquées dans l'exécutable.
+Avec une installation locale de
+[SDL_shadercross](https://github.com/libsdl-org/SDL_shadercross) :
 
 ```sh
 ./src/tgc/gpu/shaders/build-shaders.sh
 ```
+
+Sur Apple Silicon, l'image `ghcr.io/kdridi/20gc-shadercross` construite par la
+CI permet plutôt d'utiliser :
+
+```sh
+./src/tgc/gpu/shaders/build-shaders-container.sh
+```
+
+La provenance des fichiers, la construction de l'image et la procédure de
+régénération sont détaillées dans `src/tgc/gpu/shaders/README.md`.
 
 ## Portabilité
 

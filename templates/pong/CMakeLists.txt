@@ -50,6 +50,12 @@ set(pong_shader_sources
     src/tgc/gpu/shaders/solid.frag.hlsl
 )
 
+set(pong_shader_support_files
+    src/tgc/gpu/shaders/README.md
+    src/tgc/gpu/shaders/build-shaders.sh
+    src/tgc/gpu/shaders/build-shaders-container.sh
+)
+
 set(pong_generated_shaders
     src/tgc/gpu/shaders/generated/solid.frag.dxil.h
     src/tgc/gpu/shaders/generated/solid.frag.msl.h
@@ -61,6 +67,7 @@ set(pong_generated_shaders
 
 set_source_files_properties(
     ${pong_shader_sources}
+    ${pong_shader_support_files}
     ${pong_generated_shaders}
     PROPERTIES HEADER_FILE_ONLY TRUE
 )
@@ -69,6 +76,7 @@ target_sources("${TGC_TEMPLATE_TARGET}"
     PRIVATE
         ${pong_sources}
         ${pong_shader_sources}
+        ${pong_shader_support_files}
         ${pong_generated_shaders}
     PRIVATE
         FILE_SET private_headers
