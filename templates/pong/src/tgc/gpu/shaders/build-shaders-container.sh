@@ -10,7 +10,7 @@ command -v docker >/dev/null 2>&1 || {
     exit 1
 }
 
-docker pull "$image"
+docker pull --platform linux/amd64 "$image"
 docker run --rm \
     --platform linux/amd64 \
     --user "$(id -u):$(id -g)" \
